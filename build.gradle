@@ -1,0 +1,44 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:2.0.5.RELEASE")
+    }
+}
+
+
+plugins {
+    id 'java'
+    id 'idea'
+    id 'org.springframework.boot' version "2.1.1.RELEASE"
+    id 'io.spring.dependency-management' version "1.0.6.RELEASE"
+    id 'net.ltgt.apt' version '0.10'
+}
+
+bootJar {
+    baseName = 'gs-rest-service'
+    version =  '0.1.0'
+}
+
+repositories {
+    mavenCentral()
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+dependencies {
+    compile("org.springframework.boot:spring-boot-starter-web")
+    // JPA Data (We are going to use Repositories, Entities, Hibernate, etc...)
+    compile 'org.springframework.boot:spring-boot-starter-data-jpa'
+    // Use MySQL Connector-J
+    compile 'mysql:mysql-connector-java'
+    compileOnly 'org.projectlombok:lombok:1.18.4'
+    compile group: 'io.minio', name: 'minio', version: '5.0.6'
+    apt 'org.projectlombok:lombok:1.18.4'
+    compile group: 'commons-io', name: 'commons-io', version: '2.6'
+
+    testCompile("org.springframework.boot:spring-boot-starter-test")
+}
+
