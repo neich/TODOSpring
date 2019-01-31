@@ -98,7 +98,18 @@ public class Task implements Serializable {
     return text;
   }
 
+  @JsonView(Views.Complete.class)
   public long getUserId() {
     return userId;
+  }
+
+  @JsonView(Views.Private.class)
+  public Date getDateCreated() {
+    return dateCreated;
+  }
+
+  @JsonView(Views.Private.class)
+  public Date getDateLimit() {
+    return dateLimit;
   }
 }
