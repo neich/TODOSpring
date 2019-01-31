@@ -13,7 +13,7 @@ import java.io.IOException;
  */
 public class BaseController {
 
-  public static String OK_MESSAGE = "ok";
+  public static String OK_MESSAGE = "\"ok\"";
 
   protected Long getLoggedUser(HttpSession session) {
 
