@@ -82,6 +82,16 @@ public class UserController extends BaseController {
     return userService.getUserProfile(loggedUserId);
   }
 
+  @GetMapping(path="/check")
+  @ResponseBody
+  public String checkLoggedIn(HttpSession session) {
+
+    getLoggedUser(session);
+
+    return BaseController.OK_MESSAGE;
+  }
+
+
   static class LoginUser {
     @NotNull
     public String username;
