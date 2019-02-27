@@ -17,14 +17,13 @@ import java.io.InputStream;
 import java.util.UUID;
 
 @RequestMapping(path = "/images")
-@Controller
+@RestController
 public class ImageController extends BaseController {
 
     @Autowired
     Global global;
 
     @PostMapping
-    @ResponseBody
     public String upload(HttpSession session,
                          @RequestParam("file") MultipartFile file) {
 

@@ -20,14 +20,13 @@ import java.util.Collection;
 import java.util.Date;
 
 @RequestMapping(path="/tasks")
-@Controller
+@RestController
 public class TaskController extends BaseController {
 
   @Autowired
   TaskService taskService;
 
   @GetMapping(path="/{id}")
-  @ResponseBody
   public Task getTask(HttpSession session,
                       @PathVariable("id") Long id) {
     Long userId = getLoggedUser(session);
@@ -36,7 +35,6 @@ public class TaskController extends BaseController {
   }
 
   @GetMapping
-  @ResponseBody
   @JsonView(Views.Private.class)
   public Collection<Task> listAllTasks(HttpSession session,
                                        @RequestParam(value = "from", required = false) Date from) {
@@ -46,7 +44,6 @@ public class TaskController extends BaseController {
   }
 
   @PostMapping(consumes = "application/json")
-  @ResponseBody
   public IdObject addTask(HttpSession session, @Valid @RequestBody R_Task task) {
 
     Long userId = getLoggedUser(session);
@@ -65,7 +62,6 @@ public class TaskController extends BaseController {
   }
 
   @DeleteMapping(path="/{id}")
-  @ResponseBody
   public String deleteTask(HttpSession session,
                              @PathVariable("id") Long taskId) {
     getLoggedUser(session);
@@ -74,7 +70,6 @@ public class TaskController extends BaseController {
   }
 
   @PostMapping(path="/{id}/tags")
-  @ResponseBody
   public String addTags(Collection<Long> tags, HttpSession session,
                         @PathVariable("id") Long taskId) {
 
@@ -84,7 +79,6 @@ public class TaskController extends BaseController {
   }
 
   @GetMapping(path="/{id}/tags")
-  @ResponseBody
   public Collection<Tag> getTaskTags(HttpSession session,
                                      @PathVariable("id") Long taskId) {
 

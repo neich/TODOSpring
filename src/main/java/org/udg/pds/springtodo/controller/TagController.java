@@ -12,14 +12,13 @@ import javax.validation.constraints.NotNull;
 import java.util.Collection;
 
 @RequestMapping("/tags")
-@Controller
+@RestController
 public class TagController extends BaseController {
 
   @Autowired
   TagService tagService;
 
   @GetMapping("{id}")
-  @ResponseBody
   public Tag getTag(HttpSession session,
                     @PathVariable("id") Long id) {
 
@@ -28,7 +27,6 @@ public class TagController extends BaseController {
   }
 
   @GetMapping
-  @ResponseBody
   public Collection<Tag> listAllTags(HttpSession session) {
 
     Long userId = getLoggedUser(session);
@@ -37,7 +35,6 @@ public class TagController extends BaseController {
   }
 
   @PostMapping(consumes = "application/json")
-  @ResponseBody
   public String addTag(@Valid @RequestBody R_Tag tag, HttpSession session) {
 
     Long userId = getLoggedUser(session);
@@ -51,7 +48,6 @@ public class TagController extends BaseController {
   }
 
   @DeleteMapping(path="/{id}")
-  @ResponseBody
   public String deleteTag(HttpSession session,
                             @PathVariable("id") Long tagId) {
 

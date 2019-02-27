@@ -15,7 +15,7 @@ import javax.validation.constraints.NotNull;
 
 // This class is used to process all the authentication related URLs
 @RequestMapping(path="/users")
-@Controller
+@RestController
 public class UserController extends BaseController {
 
   // This is the EJB used to access user data
@@ -23,7 +23,6 @@ public class UserController extends BaseController {
   UserService userService;
 
   @PostMapping(path="/login")
-  @ResponseBody
   @JsonView(Views.Private.class)
   public User login(HttpSession session, @Valid @RequestBody LoginUser user) {
 
@@ -35,7 +34,6 @@ public class UserController extends BaseController {
   }
 
   @PostMapping(path="/logout")
-  @ResponseBody
   @JsonView(Views.Private.class)
   public String logout(HttpSession session) {
 
@@ -47,7 +45,6 @@ public class UserController extends BaseController {
 
 
   @DeleteMapping(path="/{id}")
-  @ResponseBody
   public String deleteUser(HttpSession session, @PathVariable("id") Long userId) {
 
     Long loggedUserId = getLoggedUser(session);
@@ -63,7 +60,6 @@ public class UserController extends BaseController {
 
 
   @PostMapping(path="/register", consumes = "application/json")
-  @ResponseBody
   public String register(HttpSession session, @Valid  @RequestBody RegisterUser ru) {
 
     checkNotLoggedIn(session);
@@ -73,7 +69,6 @@ public class UserController extends BaseController {
   }
 
   @GetMapping(path="/me")
-  @ResponseBody
   @JsonView(Views.Complete.class)
   public User getUserProfile(HttpSession session) {
 
@@ -83,7 +78,6 @@ public class UserController extends BaseController {
   }
 
   @GetMapping(path="/check")
-  @ResponseBody
   public String checkLoggedIn(HttpSession session) {
 
     getLoggedUser(session);
