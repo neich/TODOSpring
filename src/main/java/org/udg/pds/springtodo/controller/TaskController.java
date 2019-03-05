@@ -70,7 +70,7 @@ public class TaskController extends BaseController {
   }
 
   @PostMapping(path="/{id}/tags")
-  public String addTags(Collection<Long> tags, HttpSession session,
+  public String addTags(@RequestBody Collection<Long> tags, HttpSession session,
                         @PathVariable("id") Long taskId) {
 
     Long userId = getLoggedUser(session);
