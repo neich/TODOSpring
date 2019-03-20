@@ -13,9 +13,9 @@ import java.io.IOException;
  */
 public class BaseController {
 
-  public static String OK_MESSAGE = "\"ok\"";
+  static String OK_MESSAGE = "\"ok\"";
 
-  protected Long getLoggedUser(HttpSession session) {
+  Long getLoggedUser(HttpSession session) {
 
     if (session == null) {
       throw new ControllerException("No sessions available!");
@@ -29,7 +29,7 @@ public class BaseController {
     return userId;
   }
 
-  protected void checkNotLoggedIn(HttpSession session) {
+  void checkNotLoggedIn(HttpSession session) {
     // Access to the HTTP session
 
     if (session == null) {
