@@ -1,14 +1,15 @@
 package org.udg.pds.springtodo.entity;
 
-/**
- * Created by imartin on 22/02/17.
- */
-public class Error {
-  public String type;
-  public String message;
+import lombok.Data;
+import lombok.NonNull;
 
-  public Error(String type, String message) {
-    this.type = type;
-    this.message = message;
-  }
+import javax.validation.constraints.NotNull;
+
+@Data
+public class Error {
+  @NonNull private String timestamp;
+  @NonNull private Integer status;
+  @NonNull private String error;
+  @NonNull private String message;
+  String path;
 }
