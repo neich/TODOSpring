@@ -18,7 +18,6 @@ import javax.validation.constraints.NotNull;
 @RestController
 public class UserController extends BaseController {
 
-  // This is the EJB used to access user data
   @Autowired
   UserService userService;
 
@@ -43,6 +42,14 @@ public class UserController extends BaseController {
     return BaseController.OK_MESSAGE;
   }
 
+  @GetMapping(path="/{id}")
+  @JsonView(Views.Public.class)
+  public User getPublicUser(HttpSession session, @PathVariable("id") Long userId) {
+
+    getLoggedUser(session);
+
+    return userService.getUser(userId);
+  }
 
   @DeleteMapping(path="/{id}")
   public String deleteUser(HttpSession session, @PathVariable("id") Long userId) {
