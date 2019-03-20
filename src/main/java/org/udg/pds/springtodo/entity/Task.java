@@ -38,25 +38,20 @@ public class Task implements Serializable {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @JsonSerialize(using = JsonDateSerializer.class)
-  @JsonDeserialize(as= JsonDateDeserializer.class)
   private Date dateCreated;
 
-  @JsonSerialize(using = JsonDateSerializer.class)
-  @JsonDeserialize(as=JsonDateDeserializer.class)
   private Date dateLimit;
 
   private Boolean completed;
 
   private String text;
 
-  @JsonIgnore
   @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "fk_user")
   private User user;
 
   @Column(name = "fk_user", insertable = false, updatable = false)
-  private long userId;
+  private Long userId;
 
   @ManyToMany(cascade = CascadeType.ALL)
   private Collection<Tag> tags = new ArrayList<>();
@@ -70,6 +65,7 @@ public class Task implements Serializable {
     this.id = id;
   }
 
+  @JsonIgnore
   public User getUser() {
     return user;
   }
@@ -104,11 +100,15 @@ public class Task implements Serializable {
   }
 
   @JsonView(Views.Private.class)
+  @JsonSerialize(using = JsonDateSerializer.class)
+  @JsonDeserialize(as= JsonDateDeserializer.class)
   public Date getDateCreated() {
     return dateCreated;
   }
 
   @JsonView(Views.Private.class)
+  @JsonSerialize(using = JsonDateSerializer.class)
+  @JsonDeserialize(as= JsonDateDeserializer.class)
   public Date getDateLimit() {
     return dateLimit;
   }
