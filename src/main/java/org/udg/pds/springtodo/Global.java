@@ -83,6 +83,7 @@ public class Global {
         taskService.addTagsToTask(user.getId(), taskId.getId(), new ArrayList<Long>() {{
             add(tag.getId());
         }});
+        userService.register("user", "user@hotmail.com", "0000");
     }
 
     public MinioClient getMinioClient() {
