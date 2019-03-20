@@ -29,25 +29,21 @@ public class User implements Serializable {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @JsonView(Views.Private.class)
-  protected Long id;
+  private Long id;
 
   @NotNull
-  @JsonView(Views.Public.class)
   private String username;
 
   @NotNull
-  @JsonView(Views.Private.class)
   private String email;
 
   @NotNull
-  @JsonIgnore
   private String password;
 
   @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
-  @JsonView(Views.Complete.class)
   private Collection<Task> tasks;
 
+  @JsonView(Views.Private.class)
   public Long getId() {
     return id;
   }
@@ -56,10 +52,22 @@ public class User implements Serializable {
     this.id = id;
   }
 
+  @JsonView(Views.Private.class)
+  public String getEmail() {
+    return email;
+  }
+
+  @JsonView(Views.Public.class)
+  public String getUsername() {
+    return username;
+  }
+
+  @JsonIgnore
   public String getPassword() {
     return password;
   }
 
+  @JsonView(Views.Complete.class)
   public Collection<Task> getTasks() {
     // Since tasks is collection controlled by JPA, it has LAZY loading by default. That means
     // that you have to query the object (calling size(), for example) to get the list initialized
