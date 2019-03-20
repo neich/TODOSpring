@@ -14,11 +14,14 @@ import org.udg.pds.springtodo.service.TaskService;
 import org.udg.pds.springtodo.service.UserService;
 
 import javax.annotation.PostConstruct;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
 @Service
 public class Global {
+    public static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+
     private MinioClient minioClient;
 
     private Logger logger = LoggerFactory.getLogger(Global.class);
