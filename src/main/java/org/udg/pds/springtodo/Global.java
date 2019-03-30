@@ -60,14 +60,14 @@ public class Global {
     @PostConstruct
     void init() {
 
-        logger.info("Starting Minio connection ...");
+        logger.info(String.format("Starting Minio connection to URL: %s", minioURL));
         try {
             minioClient = new MinioClient(minioURL, minioAccessKey, minioSecretKey);
         } catch (Exception e) {
             logger.warn("Cannot initialize minio service with url:" + minioURL + ", access-key:" + minioAccessKey + ", secret-key:" + minioSecretKey);
         }
 
-        if (minioBucket == null) {
+        if (minioBucket == "") {
             logger.warn("Cannot initialize minio bucket: " + minioBucket);
             minioClient = null;
         }
