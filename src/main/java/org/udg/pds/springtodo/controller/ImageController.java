@@ -5,6 +5,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +15,7 @@ import org.udg.pds.springtodo.controller.exceptions.ControllerException;
 
 import javax.servlet.http.HttpSession;
 import java.io.InputStream;
+import java.net.URLConnection;
 import java.util.UUID;
 
 @RequestMapping(path = "/images")
@@ -61,8 +63,12 @@ public class ImageController extends BaseController {
 
         try {
             InputStream file = minioClient.getObject(global.getMinioBucket(), filename);
-            return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,"attachment; filename=\"file\"")
-                    .body(new InputStreamResource(file));
+            InputStreamResource body = new InputStreamResource(file);
+            HttpHeaders headers = new HttpHeaders();
+            // headers.setContentLength(body.contentLength());
+            // headers.setContentDispositionFormData("attachment", "test.csv");
+            headers.setContentType(MediaType.parseMediaType(URLConnection.guessContentTypeFromName(filename)));
+            return ResponseEntity.ok().headers(headers).body(body);
 
         } catch (Exception e) {
             throw new ControllerException("Error downloading file: " + e.getMessage());
