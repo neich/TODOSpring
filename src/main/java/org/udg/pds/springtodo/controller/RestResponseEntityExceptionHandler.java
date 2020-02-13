@@ -1,9 +1,12 @@
 package org.udg.pds.springtodo.controller;
 
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.lang.Nullable;
+import org.springframework.util.CollectionUtils;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -12,50 +15,20 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import org.springframework.web.util.WebUtils;
 import org.udg.pds.springtodo.Global;
 import org.udg.pds.springtodo.controller.exceptions.ControllerException;
 import org.udg.pds.springtodo.controller.exceptions.ServiceException;
 import org.udg.pds.springtodo.entity.Error;
 
 import java.util.Date;
+import java.util.Set;
 
 @ControllerAdvice
 public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
 
     public RestResponseEntityExceptionHandler() {
         super();
-    }
-
-    // Overriding of predefined methods in ResponseEntityExceptionHandler
-    // NOT ALL are overrided. Look ResponseEntityExceptionHandler
-
-    @Override
-    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
-                                                                  HttpHeaders headers, HttpStatus status, WebRequest request) {
-        StringBuilder sb = new StringBuilder("Errors: ");
-        for (ObjectError error : ex.getBindingResult().getAllErrors()) {
-            FieldError fe = (FieldError) error;
-            if (fe != null) sb.append(String.format("[Field: %s, error: %s ] ", fe.getField(), fe.getDefaultMessage()));
-        }
-
-        return handleExceptionInternal(ex,
-                new Error(Global.dateFormat.format(new Date()),
-                        status.value(),
-                        "Validation failed for body",
-                        sb.toString()),
-                headers, status, request);
-    }
-
-    @Override
-    protected ResponseEntity<Object> handleHttpMessageNotReadable(
-            HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
-
-        return handleExceptionInternal(ex,
-                new Error(Global.dateFormat.format(new Date()),
-                        status.value(),
-                        "Message not readable",
-                        ex.getMessage()),
-                headers, status, request);
     }
 
     // Other exceptions. Add your own exception handling here
@@ -84,6 +57,19 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
                         "Unknown error",
                         ex.getMessage()),
                 new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleExceptionInternal(
+        Exception ex, @Nullable Object body, HttpHeaders headers, HttpStatus status, WebRequest request) {
+
+        if (HttpStatus.INTERNAL_SERVER_ERROR.equals(status)) {
+            request.setAttribute(WebUtils.ERROR_EXCEPTION_ATTRIBUTE, ex, WebRequest.SCOPE_REQUEST);
+        }
+        if (body == null) {
+            body = new Error(Global.dateFormat.format(new Date()), status.value(), "Unknown error", ex.getMessage());
+        }
+        return new ResponseEntity<>(body, headers, status);
     }
 
 }
