@@ -48,16 +48,6 @@ public class TaskController extends BaseController {
 
     Long userId = getLoggedUser(session);
 
-    if (task.text == null) {
-      throw new ControllerException("No text supplied");
-    }
-    if (task.dateCreated == null) {
-      throw new ControllerException("No creation date supplied");
-    }
-    if (task.dateLimit == null) {
-      throw new ControllerException("No limit date supplied");
-    }
-
     return taskService.addTask(task.text, userId, task.dateCreated, task.dateLimit);
   }
 
