@@ -31,9 +31,7 @@ public class TaskService {
   }
 
   public Collection<Task> getTasks(Long id) {
-    Optional<User> u = userService.crud().findById(id);
-    if (!u.isPresent()) throw new ServiceException("User does not exists");
-    return u.get().getTasks();
+      return userService.getUser(id).getTasks();
   }
 
   public Task getTask(Long userId, Long id) {
@@ -74,11 +72,8 @@ public class TaskService {
 
     try {
       for (Long tagId : tags) {
-        Optional<Tag> otag = tagService.crud().findById(tagId);
-        if (otag.isPresent())
-          t.addTag(otag.get());
-        else
-          throw new ServiceException("Tag dos not exists");
+        Tag tag = tagService.getTag(tagId);
+        t.addTag(tag);
       }
     } catch (Exception ex) {
       // Very important: if you want that an exception reaches the EJB caller, you have to throw an ServiceException
