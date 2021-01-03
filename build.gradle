@@ -7,9 +7,9 @@ buildscript {
 plugins {
     id 'java'
     id 'idea'
-    id 'org.springframework.boot' version "2.2.2.RELEASE"
-    id 'io.spring.dependency-management' version "1.0.8.RELEASE"
-    id 'net.ltgt.apt' version '0.21'
+    id 'org.springframework.boot' version "2.3.7.RELEASE"
+    id 'io.spring.dependency-management' version "1.0.10.RELEASE"
+    id 'net.ltgt.apt-idea' version '0.21'
 }
 
 bootRun {
@@ -20,27 +20,28 @@ bootRun {
 
 bootJar {
     baseName = 'todo-spring'
-    version =  '0.3.0'
+    version =  '0.4.0'
 }
 
 repositories {
     mavenCentral()
 }
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+sourceCompatibility = 1.11
+targetCompatibility = 1.11
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     // JPA Data (We are going to use Repositories, Entities, Hibernate, etc...)
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
     // Use MySQL Connector-J
     implementation 'mysql:mysql-connector-java'
-    implementation 'io.minio:minio:6.0.11'
+    implementation 'io.minio:minio:7.1.4'
     implementation 'commons-io:commons-io:2.6'
 
-    compileOnly 'org.projectlombok:lombok:1.18.10'
-    annotationProcessor 'org.projectlombok:lombok:1.18.10'
+    compileOnly 'org.projectlombok:lombok:1.18.16'
+    annotationProcessor 'org.projectlombok:lombok:1.18.16'
 
     testCompile("org.springframework.boot:spring-boot-starter-test")
 }
