@@ -5,10 +5,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.udg.pds.springtodo.entity.IdObject;
 import org.udg.pds.springtodo.entity.Tag;
 import org.udg.pds.springtodo.entity.User;
+import org.udg.pds.springtodo.repository.TagRepository;
+import org.udg.pds.springtodo.repository.TaskRepository;
+import org.udg.pds.springtodo.repository.UserRepository;
 import org.udg.pds.springtodo.service.TagService;
 import org.udg.pds.springtodo.service.TaskService;
 import org.udg.pds.springtodo.service.UserService;
@@ -24,7 +28,7 @@ public class Global {
 
     private MinioClient minioClient;
 
-    private Logger logger = LoggerFactory.getLogger(Global.class);
+    private final Logger logger = LoggerFactory.getLogger(Global.class);
 
     @Autowired
     private
@@ -37,6 +41,12 @@ public class Global {
     @Autowired
     private
     TagService tagService;
+
+    @Autowired
+    private Environment environment;
+
+    @Value("${spring.profiles.active}")
+    private String activeProfile;
 
     @Value("${todospring.minio.url:}")
     private String minioURL;
@@ -62,12 +72,15 @@ public class Global {
 
         logger.info(String.format("Starting Minio connection to URL: %s", minioURL));
         try {
-            minioClient = new MinioClient(minioURL, minioAccessKey, minioSecretKey);
+            minioClient = MinioClient.builder()
+                                     .endpoint(minioURL)
+                                     .credentials(minioAccessKey, minioSecretKey)
+                                     .build();
         } catch (Exception e) {
             logger.warn("Cannot initialize minio service with url:" + minioURL + ", access-key:" + minioAccessKey + ", secret-key:" + minioSecretKey);
         }
 
-        if (minioBucket == "") {
+        if (minioBucket.equals("")) {
             logger.warn("Cannot initialize minio bucket: " + minioBucket);
             minioClient = null;
         }
@@ -79,14 +92,19 @@ public class Global {
     }
 
     private void initData() {
-        logger.info("Starting populating database ...");
-        User user = userService.register("usuari", "usuari@hotmail.com", "123456");
-        IdObject taskId = taskService.addTask("Una tasca", user.getId(), new Date(), new Date());
-        Tag tag = tagService.addTag("ATag", "Just a tag");
-        taskService.addTagsToTask(user.getId(), taskId.getId(), new ArrayList<Long>() {{
-            add(tag.getId());
-        }});
-        userService.register("user", "user@hotmail.com", "0000");
+
+        if (activeProfile.equals("dev")) {
+            logger.info("Starting populating database ...");
+
+            User user = userService.register("usuari", "usuari@hotmail.com", "123456");
+            IdObject taskId = taskService.addTask("Una tasca", user.getId(), new Date(), new Date());
+            Tag tag = tagService.addTag("ATag", "Just a tag");
+            taskService.addTagsToTask(user.getId(), taskId.getId(), new ArrayList<Long>() {{
+                add(tag.getId());
+            }});
+            userService.register("user", "user@hotmail.com", "0000");
+        }
+
     }
 
     public MinioClient getMinioClient() {
