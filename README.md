@@ -20,6 +20,9 @@ It uses [Spring Boot 2](https://spring.io/projects/spring-boot) to produce an ja
 gradle bootRun
 ```
 
+## Prova
+Si es llegeix això és que la prova ha sortit bé.
+
 ## Image uploading
 
 In order to store files, the app uses a private object storage server: [minio      ](https://www.minio.io/). The minio configuration has to be passed to the application as properties via command line:
