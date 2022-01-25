@@ -14,43 +14,43 @@ import java.io.Serializable;
 @Entity
 // This tells JAXB that it has to ignore getters and setters and only use fields for JSON marshaling/unmarshaling
 public class Tag implements Serializable {
-  /**
-   * Default value included to remove warning. Remove or modify at will.
-   **/
-  private static final long serialVersionUID = 1L;
+    /**
+     * Default value included to remove warning. Remove or modify at will.
+     **/
+    private static final long serialVersionUID = 1L;
 
-  public Tag() {
-  }
+    // This tells JAXB that this field can be used as ID
+    // Since XmlID can only be used on Strings, we need to use LongAdapter to transform Long <-> String
+    @Id
+    // Don't forget to use the extra argument "strategy = GenerationType.IDENTITY" to get AUTO_INCREMENT
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-  public Tag(String name, String description) {
-    this.name = name;
-    this.description = description;
-  }
+    @NotNull
+    private String name;
 
-  // This tells JAXB that this field can be used as ID
-  // Since XmlID can only be used on Strings, we need to use LongAdapter to transform Long <-> String
-  @Id
-  // Don't forget to use the extra argument "strategy = GenerationType.IDENTITY" to get AUTO_INCREMENT
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+    @NotNull
+    private String description;
 
-  @NotNull
-  private String name;
+    public Tag() {
+    }
 
-  @NotNull
-  private String description;
+    public Tag(String name, String description) {
+        this.name = name;
+        this.description = description;
+    }
 
-  public String getName() {
-    return name;
-  }
+    public String getName() {
+        return name;
+    }
 
-  public void setName(String name) {
-    this.name = name;
-  }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-  public Long getId() {
-    return id;
-  }
+    public Long getId() {
+        return id;
+    }
 
     public String getDescription() {
         return description;

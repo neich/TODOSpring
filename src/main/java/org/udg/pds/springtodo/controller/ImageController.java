@@ -43,10 +43,10 @@ public class ImageController extends BaseController {
             // Upload the file to the bucket with putObject
             minioClient.putObject(
                 PutObjectArgs.builder()
-                             .bucket(global.getMinioBucket())
-                             .object(objectName)
-                             .stream(istream, -1, 10485760)
-                             .build());
+                    .bucket(global.getMinioBucket())
+                    .object(objectName)
+                    .stream(istream, -1, 10485760)
+                    .build());
 
             return String.format("\"%s\"", "http://localhost:8080/images/" + objectName);
         } catch (Exception e) {

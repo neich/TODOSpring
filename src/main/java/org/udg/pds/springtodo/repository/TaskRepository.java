@@ -5,4 +5,5 @@ import org.springframework.stereotype.Component;
 import org.udg.pds.springtodo.entity.Task;
 
 @Component
-public interface TaskRepository extends CrudRepository<Task, Long> {}
+public interface TaskRepository extends CrudRepository<Task, Long> {
+}

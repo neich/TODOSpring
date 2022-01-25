@@ -8,7 +8,6 @@ import org.udg.pds.springtodo.Global;
 
 import java.io.IOException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -16,12 +15,12 @@ import java.util.Date;
  */
 public class JsonDateDeserializer extends JsonDeserializer<Date> {
 
-  @Override
-  public Date deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JsonProcessingException {
-    try {
-      return Global.dateFormat.parse(jsonParser.getValueAsString());
-    } catch (ParseException e) {
-      return null;
+    @Override
+    public Date deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
+        try {
+            return Global.dateFormat.parse(jsonParser.getValueAsString());
+        } catch (ParseException e) {
+            return null;
+        }
     }
-  }
 }

@@ -1,16 +1,9 @@
 package org.udg.pds.springtodo.controller;
 
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.lang.Nullable;
-import org.springframework.util.CollectionUtils;
-import org.springframework.validation.FieldError;
-import org.springframework.validation.ObjectError;
-import org.springframework.web.HttpRequestMethodNotSupportedException;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -22,7 +15,6 @@ import org.udg.pds.springtodo.controller.exceptions.ServiceException;
 import org.udg.pds.springtodo.entity.Error;
 
 import java.util.Date;
-import java.util.Set;
 
 @ControllerAdvice
 public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
@@ -33,29 +25,29 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 
     // Other exceptions. Add your own exception handling here
 
-    @ExceptionHandler({ Exception.class })
+    @ExceptionHandler({Exception.class})
     protected ResponseEntity<Object> handleOtherExceptions(Exception ex, WebRequest request) {
 
         if (ex instanceof ServiceException) {
             return handleExceptionInternal(ex,
-                    new Error(Global.dateFormat.format(new Date()),
-                            HttpStatus.BAD_REQUEST.value(),
-                            "Service error",
-                            ex.getMessage()),
-                    new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+                new Error(Global.dateFormat.format(new Date()),
+                    HttpStatus.BAD_REQUEST.value(),
+                    "Service error",
+                    ex.getMessage()),
+                new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
         } else if (ex instanceof ControllerException) {
             return handleExceptionInternal(ex,
-                    new Error(Global.dateFormat.format(new Date()),
-                            HttpStatus.BAD_REQUEST.value(),
-                            "Controller error",
-                            ex.getMessage()),
-                    new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+                new Error(Global.dateFormat.format(new Date()),
+                    HttpStatus.BAD_REQUEST.value(),
+                    "Controller error",
+                    ex.getMessage()),
+                new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
         } else
             return handleExceptionInternal(ex,
                 new Error(Global.dateFormat.format(new Date()),
-                        HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                        "Unknown error",
-                        ex.getMessage()),
+                    HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                    "Unknown error",
+                    ex.getMessage()),
                 new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
     }
 

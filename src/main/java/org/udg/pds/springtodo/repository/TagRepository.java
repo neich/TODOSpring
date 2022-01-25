@@ -5,4 +5,5 @@ import org.springframework.stereotype.Component;
 import org.udg.pds.springtodo.entity.Tag;
 
 @Component
-public interface TagRepository extends CrudRepository<Tag, Long> {}
+public interface TagRepository extends CrudRepository<Tag, Long> {
+}
