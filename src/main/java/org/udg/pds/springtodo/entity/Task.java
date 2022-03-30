@@ -9,6 +9,9 @@ import org.udg.pds.springtodo.serializer.JsonDateSerializer;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -28,9 +31,9 @@ public class Task implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Date dateCreated;
+    private ZonedDateTime dateCreated;
 
-    private Date dateLimit;
+    private ZonedDateTime dateLimit;
 
     private Boolean completed;
 
@@ -49,7 +52,7 @@ public class Task implements Serializable {
     public Task() {
     }
 
-    public Task(Date dateCreated, Date dateLimit, Boolean completed, String text) {
+    public Task(ZonedDateTime dateCreated, ZonedDateTime dateLimit, Boolean completed, String text) {
         this.dateCreated = dateCreated;
         this.dateLimit = dateLimit;
         this.completed = completed;
@@ -100,16 +103,12 @@ public class Task implements Serializable {
     }
 
     @JsonView(Views.Private.class)
-    @JsonSerialize(using = JsonDateSerializer.class)
-    @JsonDeserialize(as = JsonDateDeserializer.class)
-    public Date getDateCreated() {
+    public ZonedDateTime getDateCreated() {
         return dateCreated;
     }
 
     @JsonView(Views.Private.class)
-    @JsonSerialize(using = JsonDateSerializer.class)
-    @JsonDeserialize(as = JsonDateDeserializer.class)
-    public Date getDateLimit() {
+    public ZonedDateTime getDateLimit() {
         return dateLimit;
     }
 }
