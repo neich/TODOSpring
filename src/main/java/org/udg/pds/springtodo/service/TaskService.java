@@ -10,6 +10,8 @@ import org.udg.pds.springtodo.entity.Task;
 import org.udg.pds.springtodo.entity.User;
 import org.udg.pds.springtodo.repository.TaskRepository;
 
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Optional;
@@ -42,7 +44,7 @@ public class TaskService {
 
     @Transactional
     public IdObject addTask(String text, Long userId,
-                            Date created, Date limit) {
+                            ZonedDateTime created, ZonedDateTime limit) {
         try {
             User user = userService.getUser(userId);
 
