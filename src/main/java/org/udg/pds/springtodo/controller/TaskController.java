@@ -14,6 +14,8 @@ import org.udg.pds.springtodo.service.TaskService;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Collection;
 import java.util.Date;
 
@@ -80,12 +82,10 @@ public class TaskController extends BaseController {
         public String text;
 
         @NotNull
-        @JsonDeserialize(using = JsonDateDeserializer.class)
-        public Date dateCreated;
+        public ZonedDateTime dateCreated;
 
         @NotNull
-        @JsonDeserialize(using = JsonDateDeserializer.class)
-        public Date dateLimit;
+        public ZonedDateTime dateLimit;
     }
 
 }
