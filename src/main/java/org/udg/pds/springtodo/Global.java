@@ -19,12 +19,16 @@ import org.udg.pds.springtodo.service.UserService;
 
 import javax.annotation.PostConstruct;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 
 @Service
 public class Global {
     public static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+    public static final DateTimeFormatter dtFormatter = DateTimeFormatter.ofPattern("dd-MM-yyy - HH:mm:ss Z");
 
     private MinioClient minioClient;
 
@@ -97,7 +101,7 @@ public class Global {
             logger.info("Starting populating database ...");
 
             User user = userService.register("usuari", "usuari@hotmail.com", "123456");
-            IdObject taskId = taskService.addTask("Una tasca", user.getId(), new Date(), new Date());
+            IdObject taskId = taskService.addTask("Una tasca", user.getId(), ZonedDateTime.now(), ZonedDateTime.now());
             Tag tag = tagService.addTag("ATag", "Just a tag");
             taskService.addTagsToTask(user.getId(), taskId.getId(), new ArrayList<Long>() {{
                 add(tag.getId());
