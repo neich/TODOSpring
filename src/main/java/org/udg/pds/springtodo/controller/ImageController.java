@@ -1,5 +1,6 @@
 package org.udg.pds.springtodo.controller;
 
+import io.minio.GetObjectArgs;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
 import org.apache.commons.io.FilenameUtils;
@@ -62,7 +63,7 @@ public class ImageController extends BaseController {
             throw new ControllerException("Minio client not configured");
 
         try {
-            InputStream file = minioClient.getObject(global.getMinioBucket(), filename);
+            InputStream file = minioClient.getObject(GetObjectArgs.builder().bucket(global.getMinioBucket()).object(filename).build());
             InputStreamResource body = new InputStreamResource(file);
             HttpHeaders headers = new HttpHeaders();
             // headers.setContentLength(body.contentLength());
