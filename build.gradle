@@ -7,8 +7,8 @@ buildscript {
 plugins {
     id 'java'
     id 'idea'
-    id 'org.springframework.boot' version "2.6.3"
-    id 'io.spring.dependency-management' version "1.0.11.RELEASE"
+    id 'org.springframework.boot' version "2.7.8"
+    id 'io.spring.dependency-management' version "1.1.0"
 }
 
 bootRun {
@@ -32,16 +32,18 @@ targetCompatibility = 1.11
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     // JPA Data (We are going to use Repositories, Entities, Hibernate, etc...)
+    implementation 'org.springframework.boot:spring-boot-starter-data-rest'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     // Use MySQL Connector-J
-    implementation 'mysql:mysql-connector-java'
-    implementation 'io.minio:minio:7.1.4'
-    implementation 'commons-io:commons-io:2.6'
+    runtimeOnly 'com.mysql:mysql-connector-j'
+    runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    implementation 'com.squareup.okhttp3:okhttp:4.9.3'
+    implementation 'io.minio:minio:8.3.9'
+    implementation 'commons-io:commons-io:2.11.0'
     implementation 'org.jetbrains:annotations:23.0.0'
-
-    compileOnly 'org.projectlombok:lombok:1.18.16'
-    annotationProcessor 'org.projectlombok:lombok:1.18.16'
-
 }
 
