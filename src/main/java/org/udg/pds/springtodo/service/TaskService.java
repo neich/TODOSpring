@@ -36,7 +36,7 @@ public class TaskService {
 
     public Task getTask(Long userId, Long id) {
         Optional<Task> t = taskRepository.findById(id);
-        if (!t.isPresent()) throw new ServiceException("Task does not exists");
+        if (t.isEmpty()) throw new ServiceException("Task does not exists");
         if (t.get().getUser().getId() != userId)
             throw new ServiceException("User does not own this task");
         return t.get();
