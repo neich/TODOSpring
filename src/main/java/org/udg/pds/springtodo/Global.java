@@ -1,6 +1,8 @@
 package org.udg.pds.springtodo;
 
 import io.minio.MinioClient;
+import jakarta.annotation.PostConstruct;
+import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,26 +12,19 @@ import org.springframework.stereotype.Service;
 import org.udg.pds.springtodo.entity.IdObject;
 import org.udg.pds.springtodo.entity.Tag;
 import org.udg.pds.springtodo.entity.User;
-import org.udg.pds.springtodo.repository.TagRepository;
-import org.udg.pds.springtodo.repository.TaskRepository;
-import org.udg.pds.springtodo.repository.UserRepository;
 import org.udg.pds.springtodo.service.TagService;
 import org.udg.pds.springtodo.service.TaskService;
 import org.udg.pds.springtodo.service.UserService;
 
-import javax.annotation.PostConstruct;
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 
 @Service
 public class Global {
-    public static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-    public static final DateTimeFormatter dtFormatter = DateTimeFormatter.ofPattern("dd-MM-yyy - HH:mm:ss Z");
+    public static final DateTimeFormatter AppDateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy - HH:mm:ss z");
 
+    @Getter
     private MinioClient minioClient;
 
     private final Logger logger = LoggerFactory.getLogger(Global.class);
@@ -61,6 +56,7 @@ public class Global {
     @Value("${todospring.minio.secret-key:}")
     private String minioSecretKey;
 
+    @Getter
     @Value("${todospring.minio.bucket:}")
     private String minioBucket;
 
@@ -101,7 +97,7 @@ public class Global {
             logger.info("Starting populating database ...");
 
             User user = userService.register("usuari", "usuari@hotmail.com", "123456");
-            IdObject taskId = taskService.addTask("Una tasca", user.getId(), ZonedDateTime.now(), ZonedDateTime.now());
+            IdObject taskId = taskService.addTask("Una tasca", user.getId(), AppDateFormatter.format(ZonedDateTime.now()), AppDateFormatter.format(ZonedDateTime.now()));
             Tag tag = tagService.addTag("ATag", "Just a tag");
             taskService.addTagsToTask(user.getId(), taskId.getId(), new ArrayList<Long>() {{
                 add(tag.getId());
@@ -109,14 +105,6 @@ public class Global {
             userService.register("user", "user@hotmail.com", "0000");
         }
 
-    }
-
-    public MinioClient getMinioClient() {
-        return minioClient;
-    }
-
-    public String getMinioBucket() {
-        return minioBucket;
     }
 
     public String getBaseURL() {
