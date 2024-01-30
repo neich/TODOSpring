@@ -3,6 +3,7 @@ package org.udg.pds.springtodo.controller;
 import io.minio.GetObjectArgs;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
+import jakarta.servlet.http.HttpSession;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
@@ -12,9 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.udg.pds.springtodo.Global;
-import org.udg.pds.springtodo.controller.exceptions.ControllerException;
+import org.udg.pds.springtodo.configuration.exceptions.ControllerException;
 
-import javax.servlet.http.HttpSession;
 import java.io.InputStream;
 import java.net.URLConnection;
 import java.util.UUID;
