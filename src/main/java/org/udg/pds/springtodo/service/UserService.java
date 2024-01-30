@@ -2,11 +2,12 @@ package org.udg.pds.springtodo.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.udg.pds.springtodo.controller.exceptions.ServiceException;
+import org.udg.pds.springtodo.configuration.exceptions.ServiceException;
 import org.udg.pds.springtodo.entity.Task;
 import org.udg.pds.springtodo.entity.User;
 import org.udg.pds.springtodo.repository.UserRepository;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,10 +16,6 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
-
-    public UserRepository crud() {
-        return userRepository;
-    }
 
     public User matchPassword(String username, String password) {
 
@@ -63,5 +60,10 @@ public class UserService {
         for (Task t : u.getTasks())
             t.getTags();
         return u;
+    }
+
+    public void deleteUser(Long userId) {
+        User u = this.getUser(userId);
+        userRepository.delete(u);
     }
 }

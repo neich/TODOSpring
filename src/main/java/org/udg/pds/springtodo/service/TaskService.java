@@ -1,19 +1,18 @@
 package org.udg.pds.springtodo.service;
 
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.udg.pds.springtodo.controller.exceptions.ServiceException;
+import org.udg.pds.springtodo.Global;
+import org.udg.pds.springtodo.configuration.exceptions.ServiceException;
 import org.udg.pds.springtodo.entity.IdObject;
 import org.udg.pds.springtodo.entity.Tag;
 import org.udg.pds.springtodo.entity.Task;
 import org.udg.pds.springtodo.entity.User;
 import org.udg.pds.springtodo.repository.TaskRepository;
 
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.Collection;
-import java.util.Date;
 import java.util.Optional;
 
 @Service
@@ -25,10 +24,6 @@ public class TaskService {
     TaskRepository taskRepository;
     @Autowired
     UserService userService;
-
-    public TaskRepository crud() {
-        return taskRepository;
-    }
 
     public Collection<Task> getTasks(Long id) {
         return userService.getUser(id).getTasks();
@@ -44,11 +39,14 @@ public class TaskService {
 
     @Transactional
     public IdObject addTask(String text, Long userId,
-                            ZonedDateTime created, ZonedDateTime limit) {
+                            String created, String limit) {
         try {
             User user = userService.getUser(userId);
 
-            Task task = new Task(created, limit, false, text);
+            ZonedDateTime dateCreated = ZonedDateTime.parse(created, Global.AppDateFormatter);
+            ZonedDateTime dateLimit = ZonedDateTime.parse(limit, Global.AppDateFormatter);
+
+            Task task = new Task(dateCreated, dateLimit, false, text);
 
             task.setUser(user);
 
@@ -92,4 +90,9 @@ public class TaskService {
         return t.getTags();
     }
 
+    @Transactional
+    public void deleteTask(Long userId, Long taskId) {
+        Task t = this.getTask(userId, taskId);
+        taskRepository.delete(t);
+    }
 }

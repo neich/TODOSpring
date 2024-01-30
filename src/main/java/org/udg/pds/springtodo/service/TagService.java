@@ -1,8 +1,9 @@
 package org.udg.pds.springtodo.service;
 
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.udg.pds.springtodo.controller.exceptions.ServiceException;
+import org.udg.pds.springtodo.configuration.exceptions.ServiceException;
 import org.udg.pds.springtodo.entity.Tag;
 import org.udg.pds.springtodo.repository.TagRepository;
 
@@ -17,10 +18,6 @@ public class TagService {
 
     @Autowired
     TagRepository tagRepository;
-
-    public TagRepository crud() {
-        return tagRepository;
-    }
 
     public Tag getTag(Long id) {
         Optional<Tag> ot = tagRepository.findById(id);
@@ -48,5 +45,11 @@ public class TagService {
 
         return StreamSupport.stream(tagRepository.findAll().spliterator(), false)
             .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void deleteTag(Long tagId) {
+        Tag t = this.getTag(tagId);
+        tagRepository.delete(t);
     }
 }

@@ -1,17 +1,17 @@
 package org.udg.pds.springtodo.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.udg.pds.springtodo.controller.exceptions.ControllerException;
+import org.udg.pds.springtodo.configuration.exceptions.ControllerException;
 import org.udg.pds.springtodo.entity.User;
 import org.udg.pds.springtodo.entity.Views;
 import org.udg.pds.springtodo.service.UserService;
 
-import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
+import java.util.Collection;
 
 // This class is used to process all the authentication related URLs
 @RequestMapping(path="/users")
@@ -24,7 +24,6 @@ public class UserController extends BaseController {
   @PostMapping(path="/login")
   @JsonView(Views.Private.class)
   public User login(HttpSession session, @Valid @RequestBody LoginUser user) {
-
     checkNotLoggedIn(session);
 
     User u = userService.matchPassword(user.username, user.password);
@@ -44,7 +43,7 @@ public class UserController extends BaseController {
 
   @GetMapping(path="/{id}")
   @JsonView(Views.Public.class)
-  public User getPublicUser(HttpSession session, @PathVariable("id") Long userId) {
+  public User getPublicUser(HttpSession session, @PathVariable("id") @Valid Long userId) {
 
     getLoggedUser(session);
 
@@ -59,7 +58,7 @@ public class UserController extends BaseController {
     if (!loggedUserId.equals(userId))
       throw new ControllerException("You cannot delete other users!");
 
-    userService.crud().deleteById(userId);
+    userService.deleteUser(userId);
     session.removeAttribute("simpleapp_auth_id");
 
     return BaseController.OK_MESSAGE;
@@ -92,29 +91,20 @@ public class UserController extends BaseController {
     return BaseController.OK_MESSAGE;
   }
 
-
-  static class LoginUser {
+  private static class LoginUser {
     @NotNull
     public String username;
     @NotNull
     public String password;
   }
 
-  static class RegisterUser {
+  private static class RegisterUser {
     @NotNull
     public String username;
     @NotNull
     public String email;
     @NotNull
     public String password;
-  }
-
-  static class ID {
-    public Long id;
-
-    public ID(Long id) {
-      this.id = id;
-    }
   }
 
 }

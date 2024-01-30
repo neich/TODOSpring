@@ -2,6 +2,9 @@ package org.udg.pds.springtodo.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.udg.pds.springtodo.entity.IdObject;
@@ -11,9 +14,6 @@ import org.udg.pds.springtodo.entity.Views;
 import org.udg.pds.springtodo.serializer.JsonDateDeserializer;
 import org.udg.pds.springtodo.service.TaskService;
 
-import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.Collection;
@@ -54,8 +54,8 @@ public class TaskController extends BaseController {
     @DeleteMapping(path = "/{id}")
     public String deleteTask(HttpSession session,
                              @PathVariable("id") Long taskId) {
-        getLoggedUser(session);
-        taskService.crud().deleteById(taskId);
+        Long userId = getLoggedUser(session);
+        taskService.deleteTask(userId, taskId);
         return BaseController.OK_MESSAGE;
     }
 
@@ -82,10 +82,10 @@ public class TaskController extends BaseController {
         public String text;
 
         @NotNull
-        public ZonedDateTime dateCreated;
+        public String dateCreated;
 
         @NotNull
-        public ZonedDateTime dateLimit;
+        public String dateLimit;
     }
 
 }
