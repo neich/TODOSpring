@@ -1,13 +1,13 @@
 package org.udg.pds.springtodo.controller;
 
+import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.udg.pds.springtodo.entity.Tag;
 import org.udg.pds.springtodo.service.TagService;
 
-import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import java.util.Collection;
 
 @RequestMapping("/tags")
@@ -52,7 +52,7 @@ public class TagController extends BaseController {
 
         Long userId = getLoggedUser(session);
 
-        tagService.crud().deleteById(tagId);
+        tagService.deleteTag(tagId);
         return BaseController.OK_MESSAGE;
     }
 
