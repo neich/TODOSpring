@@ -7,8 +7,8 @@ buildscript {
 plugins {
     id 'java'
     id 'idea'
-    id 'org.springframework.boot' version "2.7.8"
-    id 'io.spring.dependency-management' version "1.1.0"
+    id 'org.springframework.boot' version "3.1.8"
+    id 'io.spring.dependency-management' version "1.1.4"
 }
 
 bootRun {
@@ -19,18 +19,20 @@ bootRun {
 
 bootJar {
     baseName = 'todo-spring'
-    version =  '0.5.0'
+    version =  '0.6.0'
 }
 
 repositories {
     mavenCentral()
 }
 
-sourceCompatibility = 1.11
-targetCompatibility = 1.11
+sourceCompatibility = 1.17
+targetCompatibility = 1.17
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
     // JPA Data (We are going to use Repositories, Entities, Hibernate, etc...)
     implementation 'org.springframework.boot:spring-boot-starter-data-rest'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
@@ -41,8 +43,8 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
 
-    implementation 'com.squareup.okhttp3:okhttp:4.9.3'
-    implementation 'io.minio:minio:8.3.9'
+    implementation 'com.squareup.okhttp3:okhttp:4.12.0'
+    implementation 'io.minio:minio:8.5.7'
     implementation 'commons-io:commons-io:2.11.0'
     implementation 'org.jetbrains:annotations:23.0.0'
 }
