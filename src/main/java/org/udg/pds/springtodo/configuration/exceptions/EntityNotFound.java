@@ -1,4 +1,4 @@
-package org.udg.pds.springtodo.controller.exceptions;
+package org.udg.pds.springtodo.configuration.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
