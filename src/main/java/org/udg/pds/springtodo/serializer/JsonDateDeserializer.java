@@ -8,18 +8,20 @@ import org.udg.pds.springtodo.Global;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.Date;
 
 /**
  * Created by imartin on 14/02/17.
  */
-public class JsonDateDeserializer extends JsonDeserializer<Date> {
+public class JsonDateDeserializer extends JsonDeserializer<ZonedDateTime> {
 
     @Override
-    public Date deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
+    public ZonedDateTime deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
         try {
-            return Global.dateFormat.parse(jsonParser.getValueAsString());
-        } catch (ParseException e) {
+            return ZonedDateTime.parse(jsonParser.getValueAsString());
+        } catch (DateTimeParseException e) {
             return null;
         }
     }
