@@ -1,9 +1,9 @@
 package org.udg.pds.springtodo.controller;
 
+import jakarta.servlet.http.HttpSession;
 import org.springframework.http.converter.json.MappingJacksonValue;
-import org.udg.pds.springtodo.controller.exceptions.ControllerException;
+import org.udg.pds.springtodo.configuration.exceptions.ControllerException;
 
-import javax.servlet.http.HttpSession;
 
 /**
  * Created by imartin on 21/02/17.
