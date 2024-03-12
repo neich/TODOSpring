@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.udg.pds.springtodo.configuration.exceptions.ControllerException;
+import org.udg.pds.springtodo.entity.Group;
 import org.udg.pds.springtodo.entity.User;
 import org.udg.pds.springtodo.entity.Views;
 import org.udg.pds.springtodo.service.UserService;
@@ -74,16 +75,24 @@ public class UserController extends BaseController {
 
   }
 
-  @GetMapping(path="/me")
-  @JsonView(Views.Complete.class)
-  public User getUserProfile(HttpSession session) {
+    @GetMapping(path="/me")
+    @JsonView(Views.Complete.class)
+    public User getUserProfile(HttpSession session) {
 
-    Long loggedUserId = getLoggedUser(session);
+        Long loggedUserId = getLoggedUser(session);
 
-    return userService.getUserProfile(loggedUserId);
-  }
+        return userService.getUserProfile(loggedUserId);
+    }
 
-  @GetMapping(path="/check")
+    @GetMapping(path="/me/owned_groups")
+    @JsonView(Views.Complete.class)
+    public Collection<Group> getOwnedGroups(HttpSession session) {
+        Long loggedUserId = getLoggedUser(session);
+
+        return userService.getOwnedGoups(loggedUserId);
+    }
+
+    @GetMapping(path="/check")
   public String checkLoggedIn(HttpSession session) {
 
     getLoggedUser(session);
