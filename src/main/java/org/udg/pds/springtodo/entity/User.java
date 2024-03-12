@@ -12,7 +12,7 @@ import java.util.List;
 
 @Entity(name = "users")
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = {"email", "username"}))
-public class User implements Serializable {
+public class User extends BaseEntity implements Serializable {
   /**
    * Default value included to remove warning. Remove or modify at will. *
    */
@@ -28,9 +28,6 @@ public class User implements Serializable {
     this.tasks = new ArrayList<>();
   }
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
 
   @NotNull
   private String username;
@@ -47,10 +44,6 @@ public class User implements Serializable {
   @JsonView(Views.Private.class)
   public Long getId() {
     return id;
-  }
-
-  public void setId(Long id) {
-    this.id = id;
   }
 
   @JsonView(Views.Private.class)
