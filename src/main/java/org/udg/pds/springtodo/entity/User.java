@@ -1,9 +1,12 @@
 package org.udg.pds.springtodo.entity;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import org.apache.commons.compress.changes.ChangeSet;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -12,13 +15,14 @@ import java.util.List;
 
 @Entity(name = "users")
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = {"email", "username"}))
+@JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class,
+    property = "id", scope = User.class)
 public class User implements Serializable {
   /**
    * Default value included to remove warning. Remove or modify at will. *
    */
   private static final long serialVersionUID = 1L;
-
-  public User() {
+    public User() {
   }
 
   public User(String username, String email, String password) {
@@ -44,7 +48,10 @@ public class User implements Serializable {
   @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
   private Collection<Task> tasks;
 
-  @JsonView(Views.Private.class)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "owner")
+    private Collection<Group> owned_groups;
+
+    @JsonView(Views.Private.class)
   public Long getId() {
     return id;
   }
@@ -77,8 +84,13 @@ public class User implements Serializable {
     return tasks;
   }
 
-  public void addTask(Task task) {
+    public void addTask(Task task) {
     tasks.add(task);
   }
 
+    @JsonView(Views.Complete.class)
+    public Collection<Group> getOwnedGroups() {
+        owned_groups.size();
+        return owned_groups;
+    }
 }

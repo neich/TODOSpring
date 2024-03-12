@@ -9,9 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
+import org.udg.pds.springtodo.entity.Group;
 import org.udg.pds.springtodo.entity.IdObject;
 import org.udg.pds.springtodo.entity.Tag;
 import org.udg.pds.springtodo.entity.User;
+import org.udg.pds.springtodo.service.GroupService;
 import org.udg.pds.springtodo.service.TagService;
 import org.udg.pds.springtodo.service.TaskService;
 import org.udg.pds.springtodo.service.UserService;
@@ -19,6 +21,7 @@ import org.udg.pds.springtodo.service.UserService;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collection;
 
 @Service
 public class Global {
@@ -40,6 +43,9 @@ public class Global {
     @Autowired
     private
     TagService tagService;
+
+    @Autowired
+    GroupService groupService;
 
     @Autowired
     private Environment environment;
@@ -102,6 +108,12 @@ public class Global {
             taskService.addTagsToTask(user.getId(), taskId.getId(), new ArrayList<Long>() {{
                 add(tag.getId());
             }});
+
+            groupService.addGroup(user.getId(), "Grup A", "Descripció de A");
+            groupService.addGroup(user.getId(), "Grup B", "Whaever  de A");
+            groupService.addGroup(user.getId(), "Grup Z", "Hola");
+            Collection<Group> grups = userService.getOwnedGoups(user.getId());
+
             userService.register("user", "user@hotmail.com", "0000");
         }
 
