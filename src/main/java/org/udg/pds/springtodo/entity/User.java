@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import org.apache.commons.compress.changes.ChangeSet;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -15,14 +14,13 @@ import java.util.List;
 
 @Entity(name = "users")
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = {"email", "username"}))
-@JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class,
-    property = "id", scope = User.class)
-public class User implements Serializable {
+public class User extends BaseEntity implements Serializable {
   /**
    * Default value included to remove warning. Remove or modify at will. *
    */
   private static final long serialVersionUID = 1L;
-    public User() {
+
+  public User() {
   }
 
   public User(String username, String email, String password) {
@@ -32,9 +30,6 @@ public class User implements Serializable {
     this.tasks = new ArrayList<>();
   }
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
 
   @NotNull
   private String username;
@@ -84,7 +79,7 @@ public class User implements Serializable {
     return tasks;
   }
 
-    public void addTask(Task task) {
+  public void addTask(Task task) {
     tasks.add(task);
   }
 

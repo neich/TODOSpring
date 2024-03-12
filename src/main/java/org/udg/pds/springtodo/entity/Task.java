@@ -7,14 +7,12 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.persistence.*;
 import org.udg.pds.springtodo.serializer.JsonDateDeserializer;
 import org.udg.pds.springtodo.serializer.JsonDateSerializer;
+import org.udg.pds.springtodo.serializer.JsonTagSerializer;
 
 import java.io.Serializable;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 
 @Entity
 // This tells JAXB that it has to ignore getters and setters and only use fields for JSON marshaling/unmarshaling
@@ -44,11 +42,7 @@ public class Task implements Serializable {
     private String text;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "fk_user")
     private User user;
-
-    @Column(name = "fk_user", insertable = false, updatable = false)
-    private Long userId;
 
     @ManyToMany(cascade = CascadeType.ALL)
     private final Collection<Tag> tags = new ArrayList<>();
@@ -86,6 +80,7 @@ public class Task implements Serializable {
     }
 
     @JsonView(Views.Complete.class)
+    @JsonSerialize(contentUsing = JsonTagSerializer.class)
     public Collection<Tag> getTags() {
         tags.size();
         return tags;
@@ -103,7 +98,7 @@ public class Task implements Serializable {
 
     @JsonView(Views.Complete.class)
     public long getUserId() {
-        return userId;
+        return user.getId();
     }
 
     @JsonView(Views.Private.class)

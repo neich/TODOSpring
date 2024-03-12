@@ -10,7 +10,6 @@ import org.udg.pds.springtodo.serializer.JsonTagSerializer;
 
 import java.io.Serializable;
 
-@JsonSerialize(using = JsonTagSerializer.class)
 @Entity
 // This tells JAXB that it has to ignore getters and setters and only use fields for JSON marshaling/unmarshaling
 public class Tag implements Serializable {

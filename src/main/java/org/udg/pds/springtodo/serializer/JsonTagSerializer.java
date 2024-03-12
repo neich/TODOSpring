@@ -17,14 +17,6 @@ public class JsonTagSerializer extends JsonSerializer<Tag> {
     @Override
     public void serialize(Tag tag, JsonGenerator gen, SerializerProvider provider)
         throws IOException, JsonProcessingException {
-        if (provider.getActiveView() == Views.Complete.class)
-            gen.writeString(tag.getName());
-        else {
-            gen.writeStartObject();
-            gen.writeNumberField("id", tag.getId());
-            gen.writeStringField("name", tag.getName());
-            gen.writeStringField("description", tag.getDescription());
-            gen.writeEndObject();
-        }
+        gen.writeString(tag.getName());
     }
 }
