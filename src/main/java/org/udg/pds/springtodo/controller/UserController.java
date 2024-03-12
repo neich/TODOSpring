@@ -15,67 +15,67 @@ import org.udg.pds.springtodo.service.UserService;
 import java.util.Collection;
 
 // This class is used to process all the authentication related URLs
-@RequestMapping(path="/users")
+@RequestMapping(path = "/users")
 @RestController
 public class UserController extends BaseController {
 
-  @Autowired
-  UserService userService;
+    @Autowired
+    UserService userService;
 
-  @PostMapping(path="/login")
-  @JsonView(Views.Private.class)
-  public User login(HttpSession session, @Valid @RequestBody LoginUser user) {
-    checkNotLoggedIn(session);
+    @PostMapping(path = "/login")
+    @JsonView(Views.Private.class)
+    public User login(HttpSession session, @Valid @RequestBody LoginUser user) {
+        checkNotLoggedIn(session);
 
-    User u = userService.matchPassword(user.username, user.password);
-    session.setAttribute("simpleapp_auth_id", u.getId());
-    return u;
-  }
+        User u = userService.matchPassword(user.username, user.password);
+        session.setAttribute("simpleapp_auth_id", u.getId());
+        return u;
+    }
 
-  @PostMapping(path="/logout")
-  @JsonView(Views.Private.class)
-  public String logout(HttpSession session) {
+    @PostMapping(path = "/logout")
+    @JsonView(Views.Private.class)
+    public String logout(HttpSession session) {
 
-    getLoggedUser(session);
+        getLoggedUser(session);
 
-    session.removeAttribute("simpleapp_auth_id");
-    return BaseController.OK_MESSAGE;
-  }
+        session.removeAttribute("simpleapp_auth_id");
+        return BaseController.OK_MESSAGE;
+    }
 
-  @GetMapping(path="/{id}")
-  @JsonView(Views.Public.class)
-  public User getPublicUser(HttpSession session, @PathVariable("id") @Valid Long userId) {
+    @GetMapping(path = "/{id}")
+    @JsonView(Views.Public.class)
+    public User getPublicUser(HttpSession session, @PathVariable("id") @Valid Long userId) {
 
-    getLoggedUser(session);
+        getLoggedUser(session);
 
-    return userService.getUser(userId);
-  }
+        return userService.getUser(userId);
+    }
 
-  @DeleteMapping(path="/{id}")
-  public String deleteUser(HttpSession session, @PathVariable("id") Long userId) {
+    @DeleteMapping(path = "/{id}")
+    public String deleteUser(HttpSession session, @PathVariable("id") Long userId) {
 
-    Long loggedUserId = getLoggedUser(session);
+        Long loggedUserId = getLoggedUser(session);
 
-    if (!loggedUserId.equals(userId))
-      throw new ControllerException("You cannot delete other users!");
+        if (!loggedUserId.equals(userId))
+            throw new ControllerException("You cannot delete other users!");
 
-    userService.deleteUser(userId);
-    session.removeAttribute("simpleapp_auth_id");
+        userService.deleteUser(userId);
+        session.removeAttribute("simpleapp_auth_id");
 
-    return BaseController.OK_MESSAGE;
-  }
+        return BaseController.OK_MESSAGE;
+    }
 
 
-  @PostMapping(path="/register", consumes = "application/json")
-  public String register(HttpSession session, @Valid  @RequestBody RegisterUser ru) {
+    @PostMapping(path = "/register", consumes = "application/json")
+    public String register(HttpSession session, @Valid @RequestBody RegisterUser ru) {
 
-    checkNotLoggedIn(session);
-    userService.register(ru.username, ru.email, ru.password);
-    return BaseController.OK_MESSAGE;
+        checkNotLoggedIn(session);
+        userService.register(ru.username, ru.email, ru.password);
+        return BaseController.OK_MESSAGE;
 
-  }
+    }
 
-    @GetMapping(path="/me")
+    @GetMapping(path = "/me")
     @JsonView(Views.Complete.class)
     public User getUserProfile(HttpSession session) {
 
@@ -84,7 +84,7 @@ public class UserController extends BaseController {
         return userService.getUserProfile(loggedUserId);
     }
 
-    @GetMapping(path="/me/owned_groups")
+    @GetMapping(path = "/me/owned_groups")
     @JsonView(Views.Complete.class)
     public Collection<Group> getOwnedGroups(HttpSession session) {
         Long loggedUserId = getLoggedUser(session);
@@ -92,28 +92,28 @@ public class UserController extends BaseController {
         return userService.getOwnedGoups(loggedUserId);
     }
 
-    @GetMapping(path="/check")
-  public String checkLoggedIn(HttpSession session) {
+    @GetMapping(path = "/check")
+    public String checkLoggedIn(HttpSession session) {
 
-    getLoggedUser(session);
+        getLoggedUser(session);
 
-    return BaseController.OK_MESSAGE;
-  }
+        return BaseController.OK_MESSAGE;
+    }
 
-  private static class LoginUser {
-    @NotNull
-    public String username;
-    @NotNull
-    public String password;
-  }
+    private static class LoginUser {
+        @NotNull
+        public String username;
+        @NotNull
+        public String password;
+    }
 
-  private static class RegisterUser {
-    @NotNull
-    public String username;
-    @NotNull
-    public String email;
-    @NotNull
-    public String password;
-  }
+    private static class RegisterUser {
+        @NotNull
+        public String username;
+        @NotNull
+        public String email;
+        @NotNull
+        public String password;
+    }
 
 }

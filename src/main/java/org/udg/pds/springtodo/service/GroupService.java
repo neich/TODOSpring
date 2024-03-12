@@ -3,14 +3,11 @@ package org.udg.pds.springtodo.service;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.udg.pds.springtodo.Global;
 import org.udg.pds.springtodo.configuration.exceptions.ServiceException;
-import org.udg.pds.springtodo.entity.*;
+import org.udg.pds.springtodo.entity.Group;
+import org.udg.pds.springtodo.entity.User;
 import org.udg.pds.springtodo.repository.GroupRepository;
-import org.udg.pds.springtodo.repository.TaskRepository;
 
-import java.time.ZonedDateTime;
-import java.util.Collection;
 import java.util.Optional;
 
 @Service

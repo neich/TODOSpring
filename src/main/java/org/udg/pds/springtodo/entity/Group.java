@@ -1,17 +1,14 @@
 package org.udg.pds.springtodo.entity;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
-import java.time.ZonedDateTime;
-import java.util.Collection;
 
-@Entity(name="ugroup")
-@JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class,
+@Entity(name = "ugroup")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
     property = "id", scope = Group.class)
 // This tells JAXB that it has to ignore getters and setters and only use fields for JSON marshaling/unmarshaling
 public class Group implements Serializable {

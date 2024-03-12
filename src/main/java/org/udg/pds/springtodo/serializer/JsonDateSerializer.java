@@ -7,7 +7,6 @@ import org.udg.pds.springtodo.Global;
 
 import java.io.IOException;
 import java.time.ZonedDateTime;
-import java.util.Date;
 
 /**
  * Created by imartin on 14/02/17.

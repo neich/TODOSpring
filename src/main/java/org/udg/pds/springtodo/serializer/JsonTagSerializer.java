@@ -5,7 +5,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import org.udg.pds.springtodo.entity.Tag;
-import org.udg.pds.springtodo.entity.Views;
 
 import java.io.IOException;
 
@@ -16,7 +15,7 @@ public class JsonTagSerializer extends JsonSerializer<Tag> {
 
     @Override
     public void serialize(Tag tag, JsonGenerator gen, SerializerProvider provider)
-        throws IOException, JsonProcessingException {
+        throws IOException {
         gen.writeString(tag.getName());
     }
 }

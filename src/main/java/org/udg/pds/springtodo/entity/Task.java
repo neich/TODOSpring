@@ -21,31 +21,24 @@ public class Task implements Serializable {
      * Default value included to remove warning. Remove or modify at will.
      **/
     private static final long serialVersionUID = 1L;
-
+    @ManyToMany(cascade = CascadeType.ALL)
+    private final Collection<Tag> tags = new ArrayList<>();
     // This tells JAXB that this field can be used as ID
     // Since XmlID can only be used on Strings, we need to use LongAdapter to transform Long <-> String
     @Id
     // Don't forget to use the extra argument "strategy = GenerationType.IDENTITY" to get AUTO_INCREMENT
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @JsonDeserialize(using = JsonDateDeserializer.class)
     @JsonSerialize(using = JsonDateSerializer.class)
     private ZonedDateTime dateCreated;
-
     @JsonDeserialize(using = JsonDateDeserializer.class)
     @JsonSerialize(using = JsonDateSerializer.class)
     private ZonedDateTime dateLimit;
-
     private Boolean completed;
-
     private String text;
-
     @ManyToOne(fetch = FetchType.EAGER)
     private User user;
-
-    @ManyToMany(cascade = CascadeType.ALL)
-    private final Collection<Tag> tags = new ArrayList<>();
 
     public Task() {
     }

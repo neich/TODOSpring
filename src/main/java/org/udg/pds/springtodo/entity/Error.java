@@ -1,4 +1,5 @@
 package org.udg.pds.springtodo.entity;
+
 import lombok.Data;
 import lombok.Getter;
 import lombok.NonNull;

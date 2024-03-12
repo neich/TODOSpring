@@ -1,12 +1,10 @@
 package org.udg.pds.springtodo.entity;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotNull;
-import org.udg.pds.springtodo.serializer.JsonTagSerializer;
 
 import java.io.Serializable;
 
