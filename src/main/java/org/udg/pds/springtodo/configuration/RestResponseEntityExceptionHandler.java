@@ -61,7 +61,7 @@ public class RestResponseEntityExceptionHandler  {
             builder.toString(),
             ex.getMessage());
         return new ResponseEntity<>(
-                apiError, new HttpHeaders(), apiError.getStatus());
+                apiError, new HttpHeaders(), apiError.status);
     }
     // Other exceptions. Add your own exception handling here
 

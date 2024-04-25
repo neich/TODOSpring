@@ -40,7 +40,6 @@ dependencies {
     // Use MySQL Connector-J
     runtimeOnly 'com.mysql:mysql-connector-j'
     runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
-    compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
 
     implementation 'com.squareup.okhttp3:okhttp:4.12.0'

@@ -1,12 +1,13 @@
 package org.udg.pds.springtodo.entity;
 
-import lombok.Data;
-import lombok.NonNull;
+import org.springframework.lang.NonNull;
 
-@Data
 public class IdObject {
 
     @NonNull
-    private Long id;
+    public Long id;
 
+    public IdObject(@NonNull Long id) {
+        this.id = id;
+    }
 }

@@ -2,7 +2,6 @@ package org.udg.pds.springtodo;
 
 import io.minio.MinioClient;
 import jakarta.annotation.PostConstruct;
-import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +23,6 @@ import java.util.ArrayList;
 public class Global {
     public static final DateTimeFormatter AppDateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy - HH:mm:ss z");
 
-    @Getter
     private MinioClient minioClient;
 
     private final Logger logger = LoggerFactory.getLogger(Global.class);
@@ -56,7 +54,6 @@ public class Global {
     @Value("${todospring.minio.secret-key:}")
     private String minioSecretKey;
 
-    @Getter
     @Value("${todospring.minio.bucket:}")
     private String minioBucket;
 
@@ -99,7 +96,7 @@ public class Global {
             User user = userService.register("usuari", "usuari@hotmail.com", "123456");
             IdObject taskId = taskService.addTask("Una tasca", user.getId(), AppDateFormatter.format(ZonedDateTime.now()), AppDateFormatter.format(ZonedDateTime.now()));
             Tag tag = tagService.addTag("ATag", "Just a tag");
-            taskService.addTagsToTask(user.getId(), taskId.getId(), new ArrayList<Long>() {{
+            taskService.addTagsToTask(user.getId(), taskId.id, new ArrayList<Long>() {{
                 add(tag.getId());
             }});
             userService.register("user", "user@hotmail.com", "0000");
@@ -109,5 +106,13 @@ public class Global {
 
     public String getBaseURL() {
         return BASE_URL;
+    }
+
+    public MinioClient getMinioClient() {
+        return minioClient;
+    }
+
+    public String getMinioBucket() {
+        return minioBucket;
     }
 }

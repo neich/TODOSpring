@@ -1,22 +1,23 @@
 package org.udg.pds.springtodo.entity;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NonNull;
 
-@Data
+import org.springframework.lang.NonNull;
+
 public class Error {
     String path;
     @NonNull
-    @Getter
-    private String timestamp;
+    public String timestamp;
     @NonNull
-    @Getter
-    private Integer status;
+    public Integer status;
     @NonNull
-    @Getter
-    private String error;
+    public String error;
     @NonNull
-    @Getter
-    private String message;
+    public String message;
 
+    public Error(@NonNull String timestamp, @NonNull Integer status, @NonNull String error, @NonNull String message) {
+        this.path = "null";
+        this.timestamp = timestamp;
+        this.status = status;
+        this.error = error;
+        this.message = message;
+    }
 }
