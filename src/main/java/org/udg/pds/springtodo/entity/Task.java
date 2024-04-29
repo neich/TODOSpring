@@ -29,12 +29,8 @@ public class Task implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @JsonDeserialize(using = JsonDateDeserializer.class)
-    @JsonSerialize(using = JsonDateSerializer.class)
     private ZonedDateTime dateCreated;
 
-    @JsonDeserialize(using = JsonDateDeserializer.class)
-    @JsonSerialize(using = JsonDateSerializer.class)
     private ZonedDateTime dateLimit;
 
     private Boolean completed;
@@ -44,7 +40,7 @@ public class Task implements Serializable {
     @ManyToOne(fetch = FetchType.EAGER)
     private User user;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     private final Collection<Tag> tags = new ArrayList<>();
 
     public Task() {

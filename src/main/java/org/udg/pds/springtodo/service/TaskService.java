@@ -39,14 +39,11 @@ public class TaskService {
 
     @Transactional
     public IdObject addTask(String text, Long userId,
-                            String created, String limit) {
+                            ZonedDateTime created, ZonedDateTime limit) {
         try {
             User user = userService.getUser(userId);
 
-            ZonedDateTime dateCreated = ZonedDateTime.parse(created, Global.AppDateFormatter);
-            ZonedDateTime dateLimit = ZonedDateTime.parse(limit, Global.AppDateFormatter);
-
-            Task task = new Task(dateCreated, dateLimit, false, text);
+            Task task = new Task(created, limit, false, text);
 
             task.setUser(user);
 

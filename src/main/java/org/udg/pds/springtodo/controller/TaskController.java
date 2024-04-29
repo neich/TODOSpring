@@ -82,10 +82,10 @@ public class TaskController extends BaseController {
         public String text;
 
         @NotNull
-        public String dateCreated;
+        public ZonedDateTime dateCreated;
 
         @NotNull
-        public String dateLimit;
+        public ZonedDateTime dateLimit;
     }
 
 }

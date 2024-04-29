@@ -94,7 +94,7 @@ public class Global {
             logger.info("Starting populating database ...");
 
             User user = userService.register("usuari", "usuari@hotmail.com", "123456");
-            IdObject taskId = taskService.addTask("Una tasca", user.getId(), AppDateFormatter.format(ZonedDateTime.now()), AppDateFormatter.format(ZonedDateTime.now()));
+            IdObject taskId = taskService.addTask("Una tasca", user.getId(), ZonedDateTime.now(), ZonedDateTime.now());
             Tag tag = tagService.addTag("ATag", "Just a tag");
             taskService.addTagsToTask(user.getId(), taskId.id, new ArrayList<Long>() {{
                 add(tag.getId());
