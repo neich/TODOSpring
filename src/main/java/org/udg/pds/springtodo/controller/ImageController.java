@@ -26,9 +26,10 @@ public class ImageController extends BaseController {
     @Autowired
     Global global;
 
-    @PostMapping
-    public String upload(HttpSession session,
-                         @RequestParam("file") MultipartFile file) {
+    @PostMapping(consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
+    public ImageReturn upload(HttpSession session,
+                         @RequestParam("file") MultipartFile file,
+                         @RequestPart("data") ImageData data) {
 
         MinioClient minioClient = global.getMinioClient();
         if (minioClient == null)
@@ -49,7 +50,7 @@ public class ImageController extends BaseController {
                     .stream(istream, -1, 10485760)
                     .build());
 
-            return String.format("\"%s\"", "http://localhost:8080/images/" + objectName);
+            return new ImageReturn(data.description, "http://localhost:8080/images/" + objectName);
         } catch (Exception e) {
             throw new ControllerException("Error saving file: " + e.getMessage());
         }
@@ -76,4 +77,20 @@ public class ImageController extends BaseController {
         }
     }
 
+    static class ImageData {
+        public String description;
+    }
+
+    static class ImageReturn {
+        public String description;
+        public String url;
+
+
+        public ImageReturn() {}
+
+        public ImageReturn(String description, String url) {
+            this.description = description;
+            this.url = url;
+        }
+    }
 }
