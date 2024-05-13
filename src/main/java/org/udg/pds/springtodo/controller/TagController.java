@@ -4,7 +4,10 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.udg.pds.springtodo.dto.Tag.TagDto;
+import org.udg.pds.springtodo.dto.Tag.TagMapper;
 import org.udg.pds.springtodo.entity.Tag;
 import org.udg.pds.springtodo.service.TagService;
 
@@ -15,26 +18,29 @@ import java.util.Collection;
 public class TagController extends BaseController {
 
     @Autowired
+    TagMapper tagMapper;
+
+    @Autowired
     TagService tagService;
 
     @GetMapping("{id}")
-    public Tag getTag(HttpSession session,
-                      @PathVariable("id") Long id) {
+    public TagDto getTag(HttpSession session,
+                         @PathVariable("id") Long id) {
 
         getLoggedUser(session);
-        return tagService.getTag(id);
+        return tagMapper.tagToTagDto(tagService.getTag(id));
     }
 
     @GetMapping
-    public Collection<Tag> listAllTags(HttpSession session) {
+    public Collection<TagDto> listAllTags(HttpSession session) {
 
         Long userId = getLoggedUser(session);
 
-        return tagService.getTags();
+        return tagMapper.map(tagService.getTags());
     }
 
     @PostMapping(consumes = "application/json")
-    public String addTag(@Valid @RequestBody R_Tag tag, HttpSession session) {
+    public TagDto addTag(@Valid @RequestBody R_Tag tag, HttpSession session) {
 
         Long userId = getLoggedUser(session);
 
@@ -42,18 +48,17 @@ public class TagController extends BaseController {
             tag.description = "";
         }
 
-        tagService.addTag(tag.name, tag.description);
-        return BaseController.OK_MESSAGE;
+        return tagMapper.tagToTagDto(tagService.addTag(tag.name, tag.description));
     }
 
     @DeleteMapping(path = "/{id}")
-    public String deleteTag(HttpSession session,
-                            @PathVariable("id") Long tagId) {
+    public ResponseEntity<Void> deleteTag(HttpSession session,
+                                    @PathVariable("id") Long tagId) {
 
         Long userId = getLoggedUser(session);
 
         tagService.deleteTag(tagId);
-        return BaseController.OK_MESSAGE;
+        return ResponseEntity.noContent().build();
     }
 
     static class R_Tag {
