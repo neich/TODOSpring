@@ -39,10 +39,4 @@ public class BaseController {
             throw new ControllerException("User is already authenticated!");
     }
 
-    MappingJacksonValue toResponse(Object pojo, Class<?> view) {
-        final MappingJacksonValue result = new MappingJacksonValue(pojo);
-        result.setSerializationView(view);
-        return result;
-    }
-
 }
