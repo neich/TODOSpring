@@ -12,6 +12,9 @@ public interface TagMapper
     TagDto tagToTagDto(Tag tag);
     List<TagDto> map(Collection<Tag> tasks);
 
-    // UserFullDto userToUserFullDto(User user);
+    Collection<String> mapToString(Collection<Tag> tags);
+    default String tagToString(Tag tag) {
+        return tag.getName();
+    }
 
 }
