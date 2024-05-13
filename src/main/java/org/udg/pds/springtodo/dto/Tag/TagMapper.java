@@ -7,12 +7,14 @@ import java.util.Collection;
 import java.util.List;
 
 @Mapper(componentModel = "spring")
-public interface TagMapper
-{
+public interface TagMapper {
+
     TagDto tagToTagDto(Tag tag);
+
     List<TagDto> map(Collection<Tag> tasks);
 
     Collection<String> mapToString(Collection<Tag> tags);
+
     default String tagToString(Tag tag) {
         return tag.getName();
     }

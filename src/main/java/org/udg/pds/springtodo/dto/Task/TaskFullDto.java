@@ -9,6 +9,7 @@ import java.util.Collection;
 @Getter
 @Setter
 public class TaskFullDto {
+
     private Long id;
 
     private Long ownerId;

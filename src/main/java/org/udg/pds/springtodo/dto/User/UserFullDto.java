@@ -6,7 +6,10 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UserFullDto {
+
     private Long id;
+
     private String username;
+
     private String email;
 }

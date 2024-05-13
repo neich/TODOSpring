@@ -14,97 +14,102 @@ import org.udg.pds.springtodo.entity.User;
 import org.udg.pds.springtodo.service.UserService;
 
 // This class is used to process all the authentication related URLs
-@RequestMapping(path="/users")
+@RequestMapping(path = "/users")
 @RestController
 public class UserController extends BaseController {
 
     @Autowired
     UserMapper userMapper;
 
-  @Autowired
-  UserService userService;
+    @Autowired
+    UserService userService;
 
-  @PostMapping(path="/login")
-  public UserDto login(HttpSession session, @Valid @RequestBody LoginUser user) {
-    checkNotLoggedIn(session);
+    @PostMapping(path = "/login")
+    public UserDto login(HttpSession session, @Valid @RequestBody LoginUser user) {
+        checkNotLoggedIn(session);
 
-    User u = userService.matchPassword(user.username, user.password);
-    session.setAttribute("simpleapp_auth_id", u.getId());
-    return userMapper.userToUserDto(u);
-  }
+        User u = userService.matchPassword(user.username, user.password);
+        session.setAttribute("simpleapp_auth_id", u.getId());
+        return userMapper.userToUserDto(u);
+    }
 
-  @PostMapping(path="/logout")
-  public ResponseEntity<Void> logout(HttpSession session) {
+    @PostMapping(path = "/logout")
+    public ResponseEntity<Void> logout(HttpSession session) {
 
-    getLoggedUser(session);
+        getLoggedUser(session);
 
-    session.removeAttribute("simpleapp_auth_id");
+        session.removeAttribute("simpleapp_auth_id");
 
-    return ResponseEntity.noContent().build();
-  }
+        return ResponseEntity.noContent().build();
+    }
 
-  @GetMapping(path="/{id}")
-  public UserDto getPublicUser(HttpSession session, @PathVariable("id") @Valid Long userId) {
+    @GetMapping(path = "/{id}")
+    public UserDto getPublicUser(HttpSession session, @PathVariable("id") @Valid Long userId) {
 
-    getLoggedUser(session);
+        getLoggedUser(session);
 
-    return userMapper.userToUserDto(userService.getUser(userId));
-  }
+        return userMapper.userToUserDto(userService.getUser(userId));
+    }
 
-  @DeleteMapping(path="/{id}")
-  public ResponseEntity<Void> deleteUser(HttpSession session, @PathVariable("id") Long userId) {
+    @DeleteMapping(path = "/{id}")
+    public ResponseEntity<Void> deleteUser(HttpSession session, @PathVariable("id") Long userId) {
 
-    Long loggedUserId = getLoggedUser(session);
+        Long loggedUserId = getLoggedUser(session);
 
-    if (!loggedUserId.equals(userId))
-      throw new ControllerException("You cannot delete other users!");
+        if (!loggedUserId.equals(userId))
+            throw new ControllerException("You cannot delete other users!");
 
-    userService.deleteUser(userId);
-    session.removeAttribute("simpleapp_auth_id");
+        userService.deleteUser(userId);
+        session.removeAttribute("simpleapp_auth_id");
 
-      return ResponseEntity.noContent().build();
-  }
+        return ResponseEntity.noContent().build();
+    }
 
 
-  @PostMapping(path="/register", consumes = "application/json")
-  public UserDto register(HttpSession session, @Valid  @RequestBody RegisterUser ru) {
+    @PostMapping(path = "/register", consumes = "application/json")
+    public UserDto register(HttpSession session, @Valid @RequestBody RegisterUser ru) {
 
-    checkNotLoggedIn(session);
-    User u = userService.register(ru.username, ru.email, ru.password);
-    return userMapper.userToUserDto(u);
+        checkNotLoggedIn(session);
+        User u = userService.register(ru.username, ru.email, ru.password);
+        return userMapper.userToUserDto(u);
 
-  }
+    }
 
-  @GetMapping(path="/me")
-  public UserFullDto getUserProfile(HttpSession session) {
+    @GetMapping(path = "/me")
+    public UserFullDto getUserProfile(HttpSession session) {
 
-    Long loggedUserId = getLoggedUser(session);
+        Long loggedUserId = getLoggedUser(session);
 
-    return userMapper.userToUserFullDto(userService.getUserProfile(loggedUserId));
-  }
+        return userMapper.userToUserFullDto(userService.getUserProfile(loggedUserId));
+    }
 
-  @GetMapping(path="/check")
-  public ResponseEntity<Void> checkLoggedIn(HttpSession session) {
+    @GetMapping(path = "/check")
+    public ResponseEntity<Void> checkLoggedIn(HttpSession session) {
 
-    getLoggedUser(session);
+        getLoggedUser(session);
 
-      return ResponseEntity.noContent().build();
-  }
+        return ResponseEntity.noContent().build();
+    }
 
-  private static class LoginUser {
-    @NotNull
-    public String username;
-    @NotNull
-    public String password;
-  }
+    private static class LoginUser {
 
-  private static class RegisterUser {
-    @NotNull
-    public String username;
-    @NotNull
-    public String email;
-    @NotNull
-    public String password;
-  }
+        @NotNull
+        public String username;
+
+        @NotNull
+        public String password;
+    }
+
+    private static class RegisterUser {
+
+        @NotNull
+        public String username;
+
+        @NotNull
+        public String email;
+
+        @NotNull
+        public String password;
+    }
 
 }

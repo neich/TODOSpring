@@ -17,6 +17,8 @@ import java.util.Collection;
 @EqualsAndHashCode(callSuper = true)
 public class Task extends BaseEntity implements Serializable {
 
+    @ManyToMany
+    private final Collection<Tag> tags = new ArrayList<>();
 
     private ZonedDateTime dateCreated;
 
@@ -31,9 +33,6 @@ public class Task extends BaseEntity implements Serializable {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_owner")
     private User user;
-
-    @ManyToMany
-    private final Collection<Tag> tags = new ArrayList<>();
 
     public Task(ZonedDateTime dateCreated, ZonedDateTime dateLimit, Boolean completed, String text) {
         this.dateCreated = dateCreated;

@@ -41,7 +41,7 @@ public class TaskController extends BaseController {
 
     @GetMapping
     public Collection<TaskDto> listAllTasks(HttpSession session,
-                                         @RequestParam(value = "from", required = false) Date from) {
+                                            @RequestParam(value = "from", required = false) Date from) {
         Long userId = getLoggedUser(session);
 
         return taskMapper.map(taskService.getTasks(userId));
@@ -57,7 +57,7 @@ public class TaskController extends BaseController {
 
     @DeleteMapping(path = "/{id}")
     public ResponseEntity<Void> deleteTask(HttpSession session,
-                                     @PathVariable("id") Long taskId) {
+                                           @PathVariable("id") Long taskId) {
         Long userId = getLoggedUser(session);
         taskService.deleteTask(userId, taskId);
         return ResponseEntity.noContent().build();
@@ -65,7 +65,7 @@ public class TaskController extends BaseController {
 
     @PostMapping(path = "/{id}/tags")
     public ResponseEntity<Void> addTags(@RequestBody Collection<Long> tags, HttpSession session,
-                          @PathVariable("id") Long taskId) {
+                                        @PathVariable("id") Long taskId) {
 
         Long userId = getLoggedUser(session);
         taskService.addTagsToTask(userId, taskId, tags);

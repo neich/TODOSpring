@@ -22,11 +22,8 @@ import java.util.ArrayList;
 @Service
 public class Global {
     public static final DateTimeFormatter AppDateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy - HH:mm:ss z");
-
-    private MinioClient minioClient;
-
     private final Logger logger = LoggerFactory.getLogger(Global.class);
-
+    private MinioClient minioClient;
     @Autowired
     private
     UserService userService;
@@ -70,9 +67,9 @@ public class Global {
         logger.info(String.format("Starting Minio connection to URL: %s", minioURL));
         try {
             minioClient = MinioClient.builder()
-                                     .endpoint(minioURL)
-                                     .credentials(minioAccessKey, minioSecretKey)
-                                     .build();
+                .endpoint(minioURL)
+                .credentials(minioAccessKey, minioSecretKey)
+                .build();
         } catch (Exception e) {
             logger.warn("Cannot initialize minio service with url:" + minioURL + ", access-key:" + minioAccessKey + ", secret-key:" + minioSecretKey);
         }

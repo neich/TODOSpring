@@ -13,10 +13,6 @@ import java.io.Serializable;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class Tag extends BaseEntity implements Serializable {
-    /**
-     * Default value included to remove warning. Remove or modify at will.
-     **/
-    private static final long serialVersionUID = 1L;
 
     @NotNull
     private String name;

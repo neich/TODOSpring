@@ -26,10 +26,10 @@ public class ImageController extends BaseController {
     @Autowired
     Global global;
 
-    @PostMapping(consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
+    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ImageReturn upload(HttpSession session,
-                         @RequestParam("file") MultipartFile file,
-                         @RequestPart("data") ImageData data) {
+                              @RequestParam("file") MultipartFile file,
+                              @RequestPart("data") ImageData data) {
 
         MinioClient minioClient = global.getMinioClient();
         if (minioClient == null)
@@ -86,7 +86,8 @@ public class ImageController extends BaseController {
         public String url;
 
 
-        public ImageReturn() {}
+        public ImageReturn() {
+        }
 
         public ImageReturn(String description, String url) {
             this.description = description;

@@ -13,7 +13,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import org.springframework.web.util.WebUtils;
 import org.udg.pds.springtodo.Global;
 import org.udg.pds.springtodo.configuration.exceptions.ControllerException;
@@ -22,11 +21,10 @@ import org.udg.pds.springtodo.entity.Error;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @ControllerAdvice
-public class RestResponseEntityExceptionHandler  {
+public class RestResponseEntityExceptionHandler {
 
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
         MethodArgumentNotValidException ex, @NotNull HttpHeaders headers, @NotNull HttpStatusCode status, @NotNull WebRequest request) {
@@ -61,7 +59,7 @@ public class RestResponseEntityExceptionHandler  {
             builder.toString(),
             ex.getMessage());
         return new ResponseEntity<>(
-                apiError, new HttpHeaders(), apiError.status);
+            apiError, new HttpHeaders(), apiError.status);
     }
     // Other exceptions. Add your own exception handling here
 

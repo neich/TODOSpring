@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.udg.pds.springtodo.dto.Tag.TagDto;
 import org.udg.pds.springtodo.dto.Tag.TagMapper;
-import org.udg.pds.springtodo.entity.Tag;
 import org.udg.pds.springtodo.service.TagService;
 
 import java.util.Collection;
@@ -53,7 +52,7 @@ public class TagController extends BaseController {
 
     @DeleteMapping(path = "/{id}")
     public ResponseEntity<Void> deleteTag(HttpSession session,
-                                    @PathVariable("id") Long tagId) {
+                                          @PathVariable("id") Long tagId) {
 
         Long userId = getLoggedUser(session);
 
@@ -62,6 +61,7 @@ public class TagController extends BaseController {
     }
 
     static class R_Tag {
+
         @NotNull
         public String name;
 
