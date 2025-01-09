@@ -7,7 +7,7 @@ buildscript {
 plugins {
     id 'java'
     id 'idea'
-    id 'org.springframework.boot' version "3.2.5"
+    id 'org.springframework.boot' version "3.3.7"
 }
 
 apply plugin: 'io.spring.dependency-management'
@@ -24,7 +24,7 @@ repositories {
 }
 
 ext {
-    mapstructVersion = "1.5.5.Final"
+    mapstructVersion = "1.6.3"
 }
 
 sourceCompatibility = 1.17
@@ -44,12 +44,12 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
 
     implementation 'com.squareup.okhttp3:okhttp:4.12.0'
-    implementation 'io.minio:minio:8.5.7'
-    implementation 'commons-io:commons-io:2.11.0'
-    implementation 'org.jetbrains:annotations:23.0.0'
+    implementation 'io.minio:minio:8.5.15'
+    implementation 'commons-io:commons-io:2.18.0'
+    implementation 'org.jetbrains:annotations:26.0.1'
 
-    compileOnly 'org.projectlombok:lombok:1.18.32'
-    annotationProcessor 'org.projectlombok:lombok:1.18.32'
+    compileOnly 'org.projectlombok:lombok:1.18.36'
+    annotationProcessor 'org.projectlombok:lombok:1.18.36'
 
     implementation "org.mapstruct:mapstruct:${mapstructVersion}"
     annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
