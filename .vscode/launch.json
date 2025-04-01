@@ -1,0 +1,15 @@
+{
+    "configurations": [
+        
+        
+        {
+            "type": "java",
+            "request": "launch",
+            "name": "Launch Spring Boot",
+            "mainClass": "org.udg.pds.springtodo.Application",
+            "projectName": "todo_spring",
+            "vmArgs": "-Dspring.profiles.active=dev"
+        }
+        
+    ]
+}
