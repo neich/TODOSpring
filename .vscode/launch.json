@@ -1,7 +1,5 @@
 {
-    "configurations": [
-        
-        
+    "configurations": [  
         {
             "type": "java",
             "request": "launch",
