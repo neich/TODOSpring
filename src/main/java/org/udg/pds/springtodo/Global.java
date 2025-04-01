@@ -36,9 +36,6 @@ public class Global {
     private
     TagService tagService;
 
-    @Autowired
-    private Environment environment;
-
     @Value("${spring.profiles.active}")
     private String activeProfile;
 

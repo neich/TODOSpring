@@ -33,15 +33,14 @@ public class TagController extends BaseController {
     @GetMapping
     public Collection<TagDto> listAllTags(HttpSession session) {
 
-        Long userId = getLoggedUser(session);
-
+        getLoggedUser(session);
         return tagMapper.map(tagService.getTags());
     }
 
     @PostMapping(consumes = "application/json")
     public TagDto addTag(@Valid @RequestBody R_Tag tag, HttpSession session) {
 
-        Long userId = getLoggedUser(session);
+        getLoggedUser(session);
 
         if (tag.description == null) {
             tag.description = "";
@@ -54,7 +53,7 @@ public class TagController extends BaseController {
     public ResponseEntity<Void> deleteTag(HttpSession session,
                                           @PathVariable("id") Long tagId) {
 
-        Long userId = getLoggedUser(session);
+        getLoggedUser(session);
 
         tagService.deleteTag(tagId);
         return ResponseEntity.noContent().build();

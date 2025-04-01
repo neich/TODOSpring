@@ -38,7 +38,6 @@ public class ImageController extends BaseController {
         try {
             // Handle the body of that part with an InputStream
             InputStream istream = file.getInputStream();
-            String contentType = file.getContentType();
             UUID imgName = UUID.randomUUID();
 
             String objectName = imgName + "." + FilenameUtils.getExtension(file.getOriginalFilename());
