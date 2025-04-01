@@ -1,0 +1,10 @@
+{
+    "java.compile.nullAnalysis.mode": "automatic",
+    "java.configuration.updateBuildConfiguration": "interactive",
+    "files.eol": "\n",
+    "java.import.gradle.enabled": true,
+    "java.import.gradle.wrapper.enabled": true,
+    "java.import.gradle.caching.enabled": true,
+    "java.import.gradle.useWrapper": true
+
+}
