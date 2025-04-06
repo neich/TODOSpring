@@ -18,4 +18,6 @@ public class TaskDto {
     private Boolean completed;
 
     private String text;
+
+    private Long userId;
 }
