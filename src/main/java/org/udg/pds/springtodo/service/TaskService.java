@@ -4,7 +4,6 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.udg.pds.springtodo.configuration.exceptions.ServiceException;
-import org.udg.pds.springtodo.entity.IdObject;
 import org.udg.pds.springtodo.entity.Tag;
 import org.udg.pds.springtodo.entity.Task;
 import org.udg.pds.springtodo.entity.User;
@@ -37,7 +36,7 @@ public class TaskService {
     }
 
     @Transactional
-    public IdObject addTask(String text, Long userId,
+    public Long addTask(String text, Long userId,
                             ZonedDateTime created, ZonedDateTime limit) {
         try {
             User user = userService.getUser(userId);
@@ -49,7 +48,7 @@ public class TaskService {
             user.addTask(task);
 
             taskRepository.save(task);
-            return new IdObject(task.getId());
+            return task.getId();
         } catch (Exception ex) {
             // Very important: if you want that an exception reaches the EJB caller, you have to throw an ServiceException
             // We catch the normal exception and then transform it in a ServiceException
