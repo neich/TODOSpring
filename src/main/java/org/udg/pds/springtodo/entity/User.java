@@ -5,18 +5,12 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotNull;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 
 @Entity(name = "users")
-@Data
-@NoArgsConstructor
-@EqualsAndHashCode(callSuper = true)
 public class User extends BaseEntity implements Serializable {
 
     @NotNull
@@ -33,6 +27,9 @@ public class User extends BaseEntity implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private Collection<Task> tasks = new ArrayList<>();
 
+    public User() {
+    }
+
     public User(String username, String email, String password) {
         this.username = username;
         this.email = email;
@@ -41,6 +38,22 @@ public class User extends BaseEntity implements Serializable {
 
     public void addTask(Task task) {
         tasks.add(task);
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public Collection<Task> getTasks() {
+        return tasks;
     }
 
 }
