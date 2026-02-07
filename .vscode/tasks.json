@@ -1,0 +1,38 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Compile Spring Boot App",
+            "type": "shell",
+            "command": "${workspaceFolder}/gradlew",
+            "args": [
+                "compileJava"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            }
+        },
+        {
+            "label": "Run Spring Boot App",
+            "type": "shell",
+            "command": "${workspaceFolder}/gradlew",
+            "args": [
+                "bootRun",
+                "--args='--spring.profiles.active=dev'"
+            ],
+            "group": "none",
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "isBackground": true
+        }
+    ]
+}

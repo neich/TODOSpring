@@ -36,30 +36,6 @@ public class Task extends BaseEntity implements Serializable {
         this.text = text;
     }
 
-    public ZonedDateTime getDateCreated() {
-        return dateCreated;
-    }
-
-    public ZonedDateTime getDateLimit() {
-        return dateLimit;
-    }
-
-    public Boolean getCompleted() {
-        return completed;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
     public void addTag(Tag tag) {
         tags.add(tag);
     }

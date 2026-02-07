@@ -68,4 +68,20 @@ public class User extends BaseEntity implements Serializable {
         tasks.add(task);
     }
 
+    public String getUsername() {
+        return username;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public Collection<Task> getTasks() {
+        return tasks;
+    }
+
 }

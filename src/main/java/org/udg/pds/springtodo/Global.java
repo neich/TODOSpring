@@ -9,6 +9,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.udg.pds.springtodo.entity.Tag;
 import org.udg.pds.springtodo.entity.User;
+import org.udg.pds.springtodo.repository.TagRepository;
+import org.udg.pds.springtodo.repository.TaskRepository;
+import org.udg.pds.springtodo.repository.UserRepository;
 import org.udg.pds.springtodo.service.TagService;
 import org.udg.pds.springtodo.service.TaskService;
 import org.udg.pds.springtodo.service.UserService;
@@ -33,6 +36,18 @@ public class Global {
     @Autowired
     private
     TagService tagService;
+
+    @Autowired
+    private
+    UserRepository userRepository;
+
+    @Autowired
+    private
+    TaskRepository taskRepository;
+
+    @Autowired
+    private
+    TagRepository tagRepository;
 
     @Value("${spring.profiles.active}")
     private String activeProfile;
@@ -83,6 +98,11 @@ public class Global {
     private void initData() {
 
         if (activeProfile.equals("dev")) {
+            logger.info("Clearing database ...");
+            taskRepository.deleteAll();
+            tagRepository.deleteAll();
+            userRepository.deleteAll();
+            
             logger.info("Starting populating database ...");
 
             User user = userService.register("usuari", "usuari@hotmail.com", "123456");
