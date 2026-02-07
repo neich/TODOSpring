@@ -2,8 +2,10 @@ package org.udg.pds.springtodo.controller;
 
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.udg.pds.springtodo.dto.Tag.TagDto;
@@ -11,7 +13,7 @@ import org.udg.pds.springtodo.dto.Tag.TagMapper;
 import org.udg.pds.springtodo.dto.Task.TaskDto;
 import org.udg.pds.springtodo.dto.Task.TaskFullDto;
 import org.udg.pds.springtodo.dto.Task.TaskMapper;
-import org.udg.pds.springtodo.entity.IdObject;
+import org.udg.pds.springtodo.dto.common.IdDto;
 import org.udg.pds.springtodo.service.TaskService;
 
 import java.time.ZonedDateTime;
@@ -48,11 +50,12 @@ public class TaskController extends BaseController {
     }
 
     @PostMapping(consumes = "application/json")
-    public IdObject addTask(HttpSession session, @Valid @RequestBody R_Task task) {
+    public IdDto addTask(HttpSession session, @Valid @RequestBody R_Task task) {
 
         Long userId = getLoggedUser(session);
 
-        return taskService.addTask(task.text, userId, task.dateCreated, task.dateLimit);
+        Long taskId = taskService.addTask(task.text, userId, task.dateCreated, task.dateLimit);
+        return new IdDto(taskId);
     }
 
     @DeleteMapping(path = "/{id}")
@@ -83,12 +86,15 @@ public class TaskController extends BaseController {
     static class R_Task {
 
         @NotNull
+        @NotBlank
         public String text;
 
         @NotNull
+        @DateTimeFormat
         public ZonedDateTime dateCreated;
 
         @NotNull
+        @DateTimeFormat
         public ZonedDateTime dateLimit;
     }
 

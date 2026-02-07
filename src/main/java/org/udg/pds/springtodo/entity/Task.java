@@ -1,7 +1,6 @@
 package org.udg.pds.springtodo.entity;
 
 import jakarta.persistence.*;
-
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -37,35 +36,11 @@ public class Task extends BaseEntity implements Serializable {
         this.text = text;
     }
 
-    public ZonedDateTime getDateCreated() {
-        return dateCreated;
-    }
-    
-    public ZonedDateTime getDateLimit() {
-        return dateLimit;
-    }
-
-    public Boolean getCompleted() {
-        return completed;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
+    public void addTag(Tag tag) {
+        tags.add(tag);
     }
 
     public Collection<Tag> getTags() {
         return tags;
-    }
-
-    public void addTag(Tag tag) {
-        tags.add(tag);
     }
 }

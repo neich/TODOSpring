@@ -7,7 +7,6 @@ import org.udg.pds.springtodo.configuration.exceptions.ServiceException;
 import org.udg.pds.springtodo.entity.Tag;
 import org.udg.pds.springtodo.repository.TagRepository;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -41,8 +40,6 @@ public class TagService {
     }
 
     public Collection<Tag> getTags() {
-        Collection<Tag> r = new ArrayList<>();
-
         return StreamSupport.stream(tagRepository.findAll().spliterator(), false)
             .collect(Collectors.toList());
     }
