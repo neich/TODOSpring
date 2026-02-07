@@ -27,8 +27,8 @@ ext {
     mapstructVersion = "1.6.3"
 }
 
-sourceCompatibility = 1.17
-targetCompatibility = 1.17
+sourceCompatibility = 1.21
+targetCompatibility = 1.21
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
