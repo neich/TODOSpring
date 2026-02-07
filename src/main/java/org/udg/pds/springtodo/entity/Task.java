@@ -1,9 +1,6 @@
 package org.udg.pds.springtodo.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.time.ZonedDateTime;
@@ -11,10 +8,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 @Entity
-// This tells JAXB that it has to ignore getters and setters and only use fields for JSON marshaling/unmarshaling
-@Data
-@NoArgsConstructor
-@EqualsAndHashCode(callSuper = true)
 public class Task extends BaseEntity implements Serializable {
 
     @ManyToMany
@@ -34,11 +27,42 @@ public class Task extends BaseEntity implements Serializable {
     @JoinColumn(name = "user_owner")
     private User user;
 
+    public Task() {
+    }
+
     public Task(ZonedDateTime dateCreated, ZonedDateTime dateLimit, Boolean completed, String text) {
         this.dateCreated = dateCreated;
         this.dateLimit = dateLimit;
         this.completed = completed;
         this.text = text;
+    }
+
+    public ZonedDateTime getDateCreated() {
+        return dateCreated;
+    }
+    
+    public ZonedDateTime getDateLimit() {
+        return dateLimit;
+    }
+
+    public Boolean getCompleted() {
+        return completed;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Collection<Tag> getTags() {
+        return tags;
     }
 
     public void addTag(Tag tag) {
