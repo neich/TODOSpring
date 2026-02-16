@@ -1,93 +1,105 @@
 package org.udg.pds.springtodo.service;
 
-import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.udg.pds.springtodo.configuration.exceptions.ServiceException;
-import org.udg.pds.springtodo.entity.Tag;
-import org.udg.pds.springtodo.entity.Task;
-import org.udg.pds.springtodo.entity.User;
+import org.springframework.transaction.annotation.Transactional;
+import org.udg.pds.springtodo.dto.IdDto;
+import org.udg.pds.springtodo.dto.TagDto;
+import org.udg.pds.springtodo.dto.TaskDto;
+import org.udg.pds.springtodo.dto.TaskFullDto;
+import org.udg.pds.springtodo.dto.TaskRequest;
+import org.udg.pds.springtodo.exception.ResourceNotFoundException;
+import org.udg.pds.springtodo.exception.ServiceException;
+import org.udg.pds.springtodo.mapper.TagMapper;
+import org.udg.pds.springtodo.mapper.TaskMapper;
+import org.udg.pds.springtodo.model.Tag;
+import org.udg.pds.springtodo.model.Task;
+import org.udg.pds.springtodo.model.User;
 import org.udg.pds.springtodo.repository.TaskRepository;
 
 import java.time.ZonedDateTime;
 import java.util.Collection;
-import java.util.Optional;
+import java.util.List;
+import java.util.Objects;
 
 @Service
 public class TaskService {
 
-    @Autowired
-    protected TagService tagService;
-    @Autowired
-    TaskRepository taskRepository;
-    @Autowired
-    UserService userService;
+    private final TaskRepository taskRepository;
+    private final UserService userService;
+    private final TagService tagService;
+    private final TaskMapper taskMapper;
+    private final TagMapper tagMapper;
 
-    public Collection<Task> getTasks(Long id) {
-        return userService.getUser(id).getTasks();
+    public TaskService(TaskRepository taskRepository, UserService userService,
+                       TagService tagService, TaskMapper taskMapper, TagMapper tagMapper) {
+        this.taskRepository = taskRepository;
+        this.userService = userService;
+        this.tagService = tagService;
+        this.taskMapper = taskMapper;
+        this.tagMapper = tagMapper;
     }
 
-    public Task getTask(Long userId, Long id) {
-        Optional<Task> t = taskRepository.findById(id);
-        if (t.isEmpty()) throw new ServiceException("Task does not exists");
-        if (t.get().getUser().getId() != userId)
-            throw new ServiceException("User does not own this task");
-        return t.get();
+    @Transactional(readOnly = true)
+    public List<TaskDto> getTasks(Long userId) {
+        User user = userService.getUserEntity(userId);
+        return taskMapper.toTaskDtoList(user.getTasks());
+    }
+
+    @Transactional(readOnly = true)
+    public TaskFullDto getTask(Long userId, Long id) {
+        Task task = getTaskEntity(userId, id);
+        return taskMapper.taskToTaskFullDto(task);
     }
 
     @Transactional
-    public Long addTask(String text, Long userId,
-                            ZonedDateTime created, ZonedDateTime limit) {
-        try {
-            User user = userService.getUser(userId);
-
-            Task task = new Task(created, limit, false, text);
-
-            task.setUser(user);
-
-            user.addTask(task);
-
-            taskRepository.save(task);
-            return task.getId();
-        } catch (Exception ex) {
-            // Very important: if you want that an exception reaches the EJB caller, you have to throw an ServiceException
-            // We catch the normal exception and then transform it in a ServiceException
-            throw new ServiceException(ex.getMessage());
-        }
+    public IdDto addTask(TaskRequest request, Long userId) {
+        User user = userService.getUserEntity(userId);
+        Task task = new Task(request.dateCreated(), request.dateLimit(), false, request.text());
+        task.setUser(user);
+        user.addTask(task);
+        taskRepository.save(task);
+        return new IdDto(task.getId());
     }
 
     @Transactional
     public void addTagsToTask(Long userId, Long taskId, Collection<Long> tags) {
-        Task t = this.getTask(userId, taskId);
+        Task task = getTaskEntity(userId, taskId);
 
-        if (t.getUser().getId() != userId)
-            throw new ServiceException("This user is not the owner of the task");
-
-        try {
-            for (Long tagId : tags) {
-                Tag tag = tagService.getTag(tagId);
-                t.addTag(tag);
-            }
-        } catch (Exception ex) {
-            // Very important: if you want that an exception reaches the EJB caller, you have to throw an ServiceException
-            // We catch the normal exception and then transform it in a ServiceException
-            throw new ServiceException(ex.getMessage());
+        for (Long tagId : tags) {
+            Tag tag = tagService.getTagEntity(tagId);
+            task.addTag(tag);
         }
     }
 
-    public Collection<Tag> getTaskTags(Long userId, Long id) {
-        Task t = this.getTask(userId, id);
-        User u = t.getUser();
-
-        if (u.getId() != userId)
-            throw new ServiceException("Logged user does not own the task");
-
-        return t.getTags();
+    @Transactional(readOnly = true)
+    public List<TagDto> getTaskTags(Long userId, Long id) {
+        Task task = getTaskEntity(userId, id);
+        return tagMapper.toTagDtoList(task.getTags());
     }
 
     @Transactional
     public void deleteTask(Long userId, Long taskId) {
-        Task t = this.getTask(userId, taskId);
-        taskRepository.delete(t);
+        Task task = getTaskEntity(userId, taskId);
+        taskRepository.delete(task);
+    }
+
+    @Transactional
+    public Long addTaskEntity(String text, Long userId,
+                              ZonedDateTime created, ZonedDateTime limit) {
+        User user = userService.getUserEntity(userId);
+        Task task = new Task(created, limit, false, text);
+        task.setUser(user);
+        user.addTask(task);
+        taskRepository.save(task);
+        return task.getId();
+    }
+
+    private Task getTaskEntity(Long userId, Long id) {
+        Task task = taskRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Task does not exist"));
+        if (!Objects.equals(task.getUser().getId(), userId)) {
+            throw new ServiceException("User does not own this task");
+        }
+        return task;
     }
 }
