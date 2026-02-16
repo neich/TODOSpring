@@ -1,6 +1,7 @@
 package org.udg.pds.springtodo.configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -9,16 +10,15 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.access.AccessDeniedHandler;
-import org.udg.pds.springtodo.Global;
-import org.udg.pds.springtodo.entity.Error;
+import org.udg.pds.springtodo.dto.ErrorResponse;
 
 import java.io.IOException;
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 import java.util.logging.Logger;
 
 public class CustomAccessDeniedHandler implements AccessDeniedHandler {
-    public static final Logger LOG
-        = Logger.getLogger(String.valueOf(CustomAccessDeniedHandler.class));
+
+    private static final Logger LOG = Logger.getLogger(CustomAccessDeniedHandler.class.getName());
 
     @Override
     public void handle(
@@ -26,22 +26,24 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
         HttpServletResponse response,
         AccessDeniedException exc) throws IOException, ServletException {
 
-        Authentication auth
-            = SecurityContextHolder.getContext().getAuthentication();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null) {
             LOG.warning("User: " + auth.getName()
                 + " attempted to access the protected URL: "
                 + request.getRequestURI());
         }
 
-        Error errorObj = new Error(Global.AppDateFormatter.format(ZonedDateTime.now()),
-            HttpStatus.BAD_REQUEST.value(),
-            "Access denied",
-            exc.getMessage());
+        ErrorResponse errorResponse = new ErrorResponse(
+            HttpStatus.FORBIDDEN.value(),
+            "Access denied: " + exc.getMessage(),
+            LocalDateTime.now());
 
-        String json = new ObjectMapper().writeValueAsString(errorObj);
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+        String json = mapper.writeValueAsString(errorResponse);
 
-        response.setStatus(HttpStatus.BAD_REQUEST.value());
+        response.setStatus(HttpStatus.FORBIDDEN.value());
+        response.setContentType("application/json");
         response.getWriter().write(json);
         response.flushBuffer();
     }
