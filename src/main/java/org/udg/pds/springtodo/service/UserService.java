@@ -1,68 +1,91 @@
 package org.udg.pds.springtodo.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.udg.pds.springtodo.configuration.exceptions.ServiceException;
-import org.udg.pds.springtodo.entity.Task;
-import org.udg.pds.springtodo.entity.User;
+import org.springframework.transaction.annotation.Transactional;
+import org.udg.pds.springtodo.dto.LoginRequest;
+import org.udg.pds.springtodo.dto.RegisterRequest;
+import org.udg.pds.springtodo.dto.UserDto;
+import org.udg.pds.springtodo.dto.UserFullDto;
+import org.udg.pds.springtodo.exception.DuplicateResourceException;
+import org.udg.pds.springtodo.exception.ResourceNotFoundException;
+import org.udg.pds.springtodo.exception.ServiceException;
+import org.udg.pds.springtodo.mapper.UserMapper;
+import org.udg.pds.springtodo.model.Task;
+import org.udg.pds.springtodo.model.User;
 import org.udg.pds.springtodo.repository.UserRepository;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.Objects;
 
 @Service
 public class UserService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
-    public User matchPassword(String username, String password) {
+    public UserService(UserRepository userRepository, UserMapper userMapper) {
+        this.userRepository = userRepository;
+        this.userMapper = userMapper;
+    }
 
-        List<User> uc = userRepository.findByUsername(username);
+    @Transactional(readOnly = true)
+    public UserDto matchPassword(LoginRequest request) {
+        User user = userRepository.findByUsername(request.username())
+            .orElseThrow(() -> new ResourceNotFoundException("User does not exist"));
 
-        if (uc.size() == 0) throw new ServiceException("User does not exists");
-
-        User u = uc.get(0);
-
-        if (u.getPassword().equals(password))
-            return u;
-        else
+        if (!user.getPassword().equals(request.password())) {
             throw new ServiceException("Password does not match");
+        }
+        return userMapper.userToUserDto(user);
     }
 
-    public User register(String username, String email, String password) {
+    @Transactional
+    public UserDto register(RegisterRequest request) {
+        if (userRepository.findByEmail(request.email()).isPresent()) {
+            throw new DuplicateResourceException("Email already exists");
+        }
+        if (userRepository.findByUsername(request.username()).isPresent()) {
+            throw new DuplicateResourceException("Username already exists");
+        }
 
-        List<User> uEmail = userRepository.findByEmail(email);
-        if (uEmail.size() > 0)
-            throw new ServiceException("Email already exist");
-
-
-        List<User> uUsername = userRepository.findByUsername(username);
-        if (uUsername.size() > 0)
-            throw new ServiceException("Username already exists");
-
-        User nu = new User(username, email, password);
-        userRepository.save(nu);
-        return nu;
+        User user = new User(request.username(), request.email(), request.password());
+        userRepository.save(user);
+        return userMapper.userToUserDto(user);
     }
 
-    public User getUser(Long id) {
-        Optional<User> uo = userRepository.findById(id);
-        if (uo.isPresent())
-            return uo.get();
-        else
-            throw new ServiceException(String.format("User with id = % dos not exists", id));
+    @Transactional(readOnly = true)
+    public UserDto getUser(Long id) {
+        User user = getUserEntity(id);
+        return userMapper.userToUserDto(user);
     }
 
-    public User getUserProfile(long id) {
-        User u = this.getUser(id);
-        for (Task t : u.getTasks())
+    @Transactional(readOnly = true)
+    public UserFullDto getUserProfile(Long id) {
+        User user = getUserEntity(id);
+        for (Task t : user.getTasks()) {
             t.getTags();
-        return u;
+        }
+        return userMapper.userToUserFullDto(user);
     }
 
-    public void deleteUser(Long userId) {
-        User u = this.getUser(userId);
-        userRepository.delete(u);
+    @Transactional
+    public void deleteUser(Long loggedUserId, Long userId) {
+        if (!Objects.equals(loggedUserId, userId)) {
+            throw new ServiceException("You cannot delete other users");
+        }
+        User user = getUserEntity(userId);
+        userRepository.delete(user);
+    }
+
+    public User getUserEntity(Long id) {
+        return userRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException(
+                String.format("User with id = %d does not exist", id)));
+    }
+
+    @Transactional
+    public User registerEntity(String username, String email, String password) {
+        User user = new User(username, email, password);
+        userRepository.save(user);
+        return user;
     }
 }
