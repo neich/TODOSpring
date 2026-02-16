@@ -1,4 +1,4 @@
-package org.udg.pds.springtodo.entity;
+package org.udg.pds.springtodo.model;
 
 import jakarta.persistence.Entity;
 import jakarta.validation.constraints.NotNull;
@@ -29,5 +29,4 @@ public class Tag extends BaseEntity implements Serializable {
     public String getDescription() {
         return description;
     }
-
 }

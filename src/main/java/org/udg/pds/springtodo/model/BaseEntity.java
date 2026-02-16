@@ -1,5 +1,4 @@
-package org.udg.pds.springtodo.entity;
-
+package org.udg.pds.springtodo.model;
 
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;

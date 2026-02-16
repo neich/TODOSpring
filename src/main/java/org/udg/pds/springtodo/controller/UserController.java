@@ -2,114 +2,78 @@ package org.udg.pds.springtodo.controller;
 
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.udg.pds.springtodo.configuration.exceptions.ControllerException;
-import org.udg.pds.springtodo.dto.User.UserDto;
-import org.udg.pds.springtodo.dto.User.UserFullDto;
-import org.udg.pds.springtodo.dto.User.UserMapper;
-import org.udg.pds.springtodo.entity.User;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.udg.pds.springtodo.dto.LoginRequest;
+import org.udg.pds.springtodo.dto.RegisterRequest;
+import org.udg.pds.springtodo.dto.UserDto;
+import org.udg.pds.springtodo.dto.UserFullDto;
 import org.udg.pds.springtodo.service.UserService;
 
-// This class is used to process all the authentication related URLs
+import java.net.URI;
+
 @RequestMapping(path = "/users")
 @RestController
 public class UserController extends BaseController {
 
-    @Autowired
-    UserMapper userMapper;
+    private final UserService userService;
 
-    @Autowired
-    UserService userService;
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @PostMapping(path = "/login")
-    public UserDto login(HttpSession session, @Valid @RequestBody LoginUser user) {
+    public ResponseEntity<UserDto> login(HttpSession session,
+                                         @Valid @RequestBody LoginRequest request) {
         checkNotLoggedIn(session);
-
-        User u = userService.matchPassword(user.username, user.password);
-        session.setAttribute("simpleapp_auth_id", u.getId());
-        return userMapper.userToUserDto(u);
+        UserDto user = userService.matchPassword(request);
+        session.setAttribute("simpleapp_auth_id", user.id());
+        return ResponseEntity.ok(user);
     }
 
     @PostMapping(path = "/logout")
     public ResponseEntity<Void> logout(HttpSession session) {
-
         getLoggedUser(session);
-
         session.removeAttribute("simpleapp_auth_id");
-
         return ResponseEntity.noContent().build();
     }
 
     @PostMapping(path = "/register", consumes = "application/json")
-    public UserDto register(HttpSession session, @Valid @RequestBody RegisterUser ru) {
-
+    public ResponseEntity<UserDto> register(HttpSession session,
+                                            @Valid @RequestBody RegisterRequest request) {
         checkNotLoggedIn(session);
-        User u = userService.register(ru.username, ru.email, ru.password);
-        return userMapper.userToUserDto(u);
-
+        UserDto created = userService.register(request);
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+            .path("/../{id}").buildAndExpand(created.id()).toUri();
+        return ResponseEntity.created(location).body(created);
     }
 
     @GetMapping(path = "/me")
-    public UserFullDto getUserProfile(HttpSession session) {
-
+    public ResponseEntity<UserFullDto> getUserProfile(HttpSession session) {
         Long loggedUserId = getLoggedUser(session);
-
-        return userMapper.userToUserFullDto(userService.getUserProfile(loggedUserId));
+        return ResponseEntity.ok(userService.getUserProfile(loggedUserId));
     }
 
     @GetMapping(path = "/check")
     public ResponseEntity<Void> checkLoggedIn(HttpSession session) {
-
         getLoggedUser(session);
-
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping(path = "/{id}")
-    public UserDto getPublicUser(HttpSession session, @PathVariable("id") @Valid Long userId) {
-
+    public ResponseEntity<UserDto> getPublicUser(HttpSession session,
+                                                 @PathVariable("id") Long userId) {
         getLoggedUser(session);
-
-        return userMapper.userToUserDto(userService.getUser(userId));
+        return ResponseEntity.ok(userService.getUser(userId));
     }
 
     @DeleteMapping(path = "/{id}")
-    public ResponseEntity<Void> deleteUser(HttpSession session, @PathVariable("id") Long userId) {
-
+    public ResponseEntity<Void> deleteUser(HttpSession session,
+                                           @PathVariable("id") Long userId) {
         Long loggedUserId = getLoggedUser(session);
-
-        if (!loggedUserId.equals(userId))
-            throw new ControllerException("You cannot delete other users!");
-
-        userService.deleteUser(userId);
+        userService.deleteUser(loggedUserId, userId);
         session.removeAttribute("simpleapp_auth_id");
-
         return ResponseEntity.noContent().build();
     }
-
-
-    private static class LoginUser {
-
-        @NotNull
-        public String username;
-
-        @NotNull
-        public String password;
-    }
-
-    private static class RegisterUser {
-
-        @NotNull
-        public String username;
-
-        @NotNull
-        public String email;
-
-        @NotNull
-        public String password;
-    }
-
 }

@@ -1,7 +1,9 @@
-package org.udg.pds.springtodo.dto.User;
+package org.udg.pds.springtodo.mapper;
 
 import org.mapstruct.Mapper;
-import org.udg.pds.springtodo.entity.User;
+import org.udg.pds.springtodo.dto.UserDto;
+import org.udg.pds.springtodo.dto.UserFullDto;
+import org.udg.pds.springtodo.model.User;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
@@ -9,6 +11,4 @@ public interface UserMapper {
     UserDto userToUserDto(User user);
 
     UserFullDto userToUserFullDto(User user);
-
-    // Long userToIdDto(User user);
 }

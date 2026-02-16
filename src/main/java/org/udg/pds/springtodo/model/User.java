@@ -1,4 +1,4 @@
-package org.udg.pds.springtodo.entity;
+package org.udg.pds.springtodo.model;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;

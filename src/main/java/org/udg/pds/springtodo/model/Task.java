@@ -1,6 +1,7 @@
-package org.udg.pds.springtodo.entity;
+package org.udg.pds.springtodo.model;
 
 import jakarta.persistence.*;
+
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -18,7 +19,6 @@ public class Task extends BaseEntity implements Serializable {
 
     private Boolean completed;
 
-    // This is needed because TEXT is a SQL reserved word
     @Column(name = "task_text")
     private String text;
 
@@ -75,7 +75,7 @@ public class Task extends BaseEntity implements Serializable {
     public void setUser(User user) {
         this.user = user;
     }
-    
+
     public void addTag(Tag tag) {
         tags.add(tag);
     }
