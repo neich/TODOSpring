@@ -2,69 +2,54 @@ package org.udg.pds.springtodo.controller;
 
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.udg.pds.springtodo.dto.Tag.TagDto;
-import org.udg.pds.springtodo.dto.Tag.TagMapper;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.udg.pds.springtodo.dto.TagDto;
+import org.udg.pds.springtodo.dto.TagRequest;
 import org.udg.pds.springtodo.service.TagService;
 
-import java.util.Collection;
+import java.net.URI;
+import java.util.List;
 
 @RequestMapping("/tags")
 @RestController
 public class TagController extends BaseController {
 
-    @Autowired
-    TagMapper tagMapper;
+    private final TagService tagService;
 
-    @Autowired
-    TagService tagService;
+    public TagController(TagService tagService) {
+        this.tagService = tagService;
+    }
 
     @GetMapping("{id}")
-    public TagDto getTag(HttpSession session,
-                         @PathVariable("id") Long id) {
-
+    public ResponseEntity<TagDto> getTag(HttpSession session,
+                                         @PathVariable("id") Long id) {
         getLoggedUser(session);
-        return tagMapper.tagToTagDto(tagService.getTag(id));
+        return ResponseEntity.ok(tagService.getTag(id));
     }
 
     @GetMapping
-    public Collection<TagDto> listAllTags(HttpSession session) {
-
+    public ResponseEntity<List<TagDto>> listAllTags(HttpSession session) {
         getLoggedUser(session);
-        return tagMapper.map(tagService.getTags());
+        return ResponseEntity.ok(tagService.getTags());
     }
 
     @PostMapping(consumes = "application/json")
-    public TagDto addTag(@Valid @RequestBody R_Tag tag, HttpSession session) {
-
+    public ResponseEntity<TagDto> addTag(HttpSession session,
+                                         @Valid @RequestBody TagRequest request) {
         getLoggedUser(session);
-
-        if (tag.description == null) {
-            tag.description = "";
-        }
-
-        return tagMapper.tagToTagDto(tagService.addTag(tag.name, tag.description));
+        TagDto created = tagService.addTag(request);
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+            .path("/{id}").buildAndExpand(created.id()).toUri();
+        return ResponseEntity.created(location).body(created);
     }
 
     @DeleteMapping(path = "/{id}")
     public ResponseEntity<Void> deleteTag(HttpSession session,
                                           @PathVariable("id") Long tagId) {
-
         getLoggedUser(session);
-
         tagService.deleteTag(tagId);
         return ResponseEntity.noContent().build();
     }
-
-    static class R_Tag {
-
-        @NotNull
-        public String name;
-
-        public String description;
-    }
-
 }
