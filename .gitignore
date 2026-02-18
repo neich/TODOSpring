@@ -6,3 +6,4 @@ out/
 bin/
 .claude
 CLAUDE.md
+*.code-workspace
